@@ -9,7 +9,7 @@ Route::set('structure/media', 'structure/media(/<file>)', array('file' => '.+'))
             'file'       => NULL,
         ));
 
-Route::set('structure', 'structure(/<file>)', array('file' => '.+'))
+Route::set('structure', 'structure(/<action>(/<id>))', array('file' => '.+'))
         ->defaults(array(
             'controller' => 'structure',
             'action'     => 'index',

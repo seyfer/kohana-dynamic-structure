@@ -31,20 +31,50 @@ class Controller_Structure extends Kohana_Controller_Template {
                 ->set('param', $id)
                 ->render();
 
-        $article = (new Model_ORM_Articles())->findArticle($id);
-
-        $roles = (new Model_ORM_Roles)->find_all()
-                ->showAsArray('name', 'description');
-
         $this->content = View::factory('structure/content.tpl')
-                ->set('struct', $structureList)
-                ->set('edit', $id)
-                ->set('article', $article)
-                ->set('roles', $roles);
+                ->set('struct', $structureList);
 
         $this->template->content = $this->content;
 
 //        echo $this->template;
+    }
+
+    public function action_edit()
+    {
+        $this->template->styles  = array();
+        $this->template->scripts = array();
+
+        $route = Route::get('structure/media');
+
+        $this->template->styles[]  = $route->uri(array('file' => 'css/admin.css'));
+        $this->template->scripts[] = $route->uri(array('file' => 'js/jquery-1.9.1.js'));
+        $this->template->scripts[] = $route->uri(array('file' => 'js/jquery-ui-1.9.2.custom.js'));
+        $this->template->scripts[] = $route->uri(array('file' => 'js/tinymce/jquery.tinymce.js'));
+        $this->template->scripts[] = $route->uri(array('file' => 'js/edit.js'));
+
+        $this->template->page = "structure";
+
+        $structure = (new Model_ORM_Structure)->getTreeAsArray();
+
+        $id = (int) $this->request->param('id');
+
+        $structureList = View::factory('structure/list.tpl')
+                ->set('left_menu_arr', $structure)
+                ->set('param', $id)
+                ->render();
+
+        $article = ORM::factory('ORM_Articles')->findArticle($id);
+
+        $roles = ORM::factory('ORM_Roles')->find_all()
+                ->showAsArray('name', 'description');
+
+        $this->content = View::factory('structure/content.tpl')
+                ->set('struct', $structureList)
+                ->set('id', $id)
+                ->set('article', $article)
+                ->set('roles', $roles);
+
+        $this->template->content = $this->content;
     }
 
     /**
@@ -52,6 +82,7 @@ class Controller_Structure extends Kohana_Controller_Template {
      */
     public function action_add()
     {
+
         $structure        = ORM::factory('ORM_Structure');
         $structure->title = "Новое поле";
         $cat              = $this->request->param('id');
@@ -64,7 +95,8 @@ class Controller_Structure extends Kohana_Controller_Template {
         }
 
         $id = $structure->id;
-        HTTP::redirect("structure/edit/{$id}");
+
+        $this->request->redirect("structure/edit/{$id}");
     }
 
     /**
@@ -77,14 +109,18 @@ class Controller_Structure extends Kohana_Controller_Template {
 
         $post = $this->request->post();
 
-        $artical = ORM::factory('ORM_Articles')->where('parent_id', '=', $id)
+        $artical = ORM::factory('ORM_Articles')
+                ->where('parent_id', '=', $id)
                 ->find();
 
 
         $artical->parent_id = $id;
-        $keyes              = array('text', 'link', 'language', 'visible', 'namehtml', 'role');
+        $keyes              = array(
+            'text', 'link', 'language', 'visible', 'namehtml', 'role'
+        );
+
         //Убираем лишнии интервалы
-        $post['text']       = str_replace('<p>&nbsp;</p>', '', $post['text']);
+        $post['text'] = str_replace('<p>&nbsp;</p>', '', $post['text']);
 
         foreach ($keyes as $key) {
             if (isset($post[$key])) {
@@ -111,7 +147,9 @@ class Controller_Structure extends Kohana_Controller_Template {
                 'Upload::valid'     => array(),
                 'Upload::size'      => array('1M'),
                 'Upload::not_empty' => array(),
-                'Upload::type'      => array('Upload::type' => array('jpg', 'png', 'gif')),
+                'Upload::type'      => array(
+                    'Upload::type' => array('jpg', 'png', 'gif')
+                ),
             ));
 
             if ($validation->check()) {
@@ -125,17 +163,20 @@ class Controller_Structure extends Kohana_Controller_Template {
 
         $link->update();
 
-        HTTP::redirect("structure/edit/{$id}");
+        $this->request->redirect("structure/index/{$id}");
     }
 
     public function action_move()
     {
-        $id      = $this->request->param('id');
-        $id2     = $this->request->param('id2');
-        $struct1 = ORM::factory('ORM_Structure')->where('id', '=', $id)
+        $id  = $this->request->param('id');
+        $id2 = $this->request->param('id2');
+
+        $struct1 = ORM::factory('ORM_Structure')
+                ->where('id', '=', $id)
                 ->find();
 
-        $struct2 = ORM::factory('ORM_Structure')->where('id', '=', $id2)
+        $struct2 = ORM::factory('ORM_Structure')
+                ->where('id', '=', $id2)
                 ->find();
 
         if (!$struct1->parent() && !$struct2->parent()) {
@@ -169,14 +210,23 @@ class Controller_Structure extends Kohana_Controller_Template {
 
     public function action_delete()
     {
-        $id   = $this->request->param('id');
+        echo 1;
+
+        $id = $this->request->param('id');
+
         $link = ORM::factory('ORM_Structure')->where('id', '=', $id)
                 ->find();
         $link->delete();
 
-        ORM::factory("ORM_Articles")->where('parent_id', '=', $id)->find()->delete();
+        $ormArticle = ORM::factory("ORM_Articles")
+                ->where('parent_id', '=', $id)
+                ->find();
 
-        HTTP::redirect("structure/edit");
+        if ($ormArticle->loaded()) {
+            $ormArticle->delete();
+        }
+
+        $this->request->redirect("structure/index");
     }
 
     /**

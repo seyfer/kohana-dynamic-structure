@@ -15,7 +15,7 @@ root {
 
 /* line 46, ../../sass/admin/admin.scss */
 .deleteStruct {
-    background: url("../../img/delete.png");
+    background: url("../img/delete.png");
     background-repeat: no-repeat;
     width: 24px;
     height: 24px;
@@ -29,7 +29,7 @@ root {
 
 /* line 55, ../../sass/admin/admin.scss */
 .editStruct {
-    background: url("../../img/edit.png");
+    background: url("../img/edit.png");
     background-repeat: no-repeat;
     width: 24px;
     height: 24px;
@@ -43,7 +43,7 @@ root {
 
 /* line 64, ../../sass/admin/admin.scss */
 .addStruct {
-    background: url("../../img/add.png");
+    background: url("../img/add.png");
     background-repeat: no-repeat;
     width: 24px;
     height: 24px;
@@ -152,7 +152,7 @@ root {
 /* line 141, ../../sass/admin/admin.scss */
 .baner-text {
     color: #ecec19;
-    background-image: url("../../img/fonLine.png");
+    background-image: url("../img/fonLine.png");
     width: 400px;
     height: 100px;
     display: table;
