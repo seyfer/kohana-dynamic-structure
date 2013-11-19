@@ -1,0 +1,134 @@
+/* 
+    Document   : main
+    Created on : 26.10.2013, 11:23:14
+    Author     : alex
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+body{
+    font-family: 'Noto Sans', sans-serif;
+}
+
+#headAdmin{
+    font-weight: bold;
+    font-size: 28px;
+}
+
+#menuAdmin{
+    background: #1648A0;
+    padding: 5px 0px;
+}
+
+.buttonMenu a{
+    background: #0b3a23;
+    background-image: -moz-linear-gradient(top, #0b3a23 0%, #263647 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0b3a23), color-stop(100%,#263647));
+    background-image: -webkit-linear-gradient(top, #0b3a23 0%,#263647 100%);
+    background-image: -o-linear-gradient(top, #0b3a23 0%,#263647 100%);
+    background-image: -ms-linear-gradient(top, #0b3a23 0%,#263647 100%);
+    background-image: linear-gradient(to bottom, #0b3a23 0%,#263647 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0b3a23', endColorstr='#263647',GradientType=0 );
+    color: #fff;
+    padding: 0.7em;
+    border: 1px solid #004352;
+    border: 1px solid #398A9C;
+    box-shadow: 0px 0px 3px #398A9C;
+    text-decoration: none;
+    display: block;
+    -webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+    background-size: 100% 100px;
+    background-position: 0 50px;
+    border-radius: 5px;
+}
+
+.buttonMenu a:hover{
+
+    background-position: 0 0;
+}
+
+.buttonMenu.select a{
+    background-position:  0 0;
+}
+
+.oneline{
+    float: left;
+}
+
+.deleteStruct{
+    background: url('/media/img/delete.png');
+    background-repeat: no-repeat;
+    width:24px;
+    height:24px;
+    cursor:pointer;
+}
+
+.addStruct{
+    background: url('/media/img/add.png');
+    background-repeat: no-repeat;
+    width:24px;
+    height:24px;
+    cursor:pointer;
+}
+
+.elementMenu{
+    border:1px solid #C6D880;
+    margin:5px 0px;
+    height:20px;
+    position: relative;
+    padding:10px 5px;
+    border-radius:5px;
+    
+    background: #bfd255; /* Old browsers */
+    background: -moz-linear-gradient(top,  #bfd255 0%, #8eb92a 47%, #9ecb2d 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#bfd255), color-stop(47%,#8eb92a), color-stop(100%,#9ecb2d)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #bfd255 0%,#8eb92a 47%,#9ecb2d 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #bfd255 0%,#8eb92a 47%,#9ecb2d 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #bfd255 0%,#8eb92a 47%,#9ecb2d 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #bfd255 0%,#8eb92a 47%,#9ecb2d 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bfd255', endColorstr='#9ecb2d',GradientType=0 ); /* IE6-9 */
+
+    background-size: 100% 80px;
+    background-position: 0 0px;
+    
+    border:1px solid greenyellow;
+}
+
+.elementMenu:hover{
+    background-position: 0 40px;
+}
+
+
+
+.elementMenu a{
+    color:black;
+    text-decoration: none;
+}
+
+.settings-label{
+    width:200px;
+    display: inline-block;
+}
+
+#showSettings{
+    cursor: pointer;
+    width:100%;
+    text-align: center;
+    border:1px solid;
+    margin: 5px 0px;
+}
+
+#settings{
+    margin: 5px 0px;
+}
+
+.work_field{
+    margin: 0px 3px;
+}

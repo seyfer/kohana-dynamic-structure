@@ -7,21 +7,14 @@ class Controller_Structure extends Kohana_Controller_Template {
     /**
      * @var   string   The path to the template view.
      */
-    public $template = 'structure/main.tpl';
+    public $template    = 'structure/main.tpl';
+    //в конфиг
+    private $uploadPath = "vendor/kohana/modules/dynamic-menu/upload/";
 
     public function action_index()
     {
-        $this->template->styles  = array();
-        $this->template->scripts = array();
 
-        $route = Route::get('structure/media');
-
-        $this->template->styles[]  = $route->uri(array('file' => 'css/admin.css'));
-        $this->template->scripts[] = 'media/js/tinymce/jquery.tinymce.js';
-        $this->template->scripts[] = $route->uri(array('file' => 'js/edit.js'));
-
-        $this->template->page = "structure";
-
+        $this->addCssAnsJs();
         $structure = (new Model_ORM_Structure)->getTreeAsArray();
 
         $id = (int) $this->request->param('id');
@@ -39,33 +32,45 @@ class Controller_Structure extends Kohana_Controller_Template {
 //        echo $this->template;
     }
 
-    public function action_edit()
+    private function addCssAnsJs()
     {
         $this->template->styles  = array();
         $this->template->scripts = array();
 
         $route = Route::get('structure/media');
 
-        $this->template->styles[]  = $route->uri(array('file' => 'css/admin.css'));
+        $this->template->styles[] = $route->uri(array('file' => 'css/admin.css'));
+        $this->template->styles[] = $route->uri(array('file' => 'css/content.css'));
+
         $this->template->scripts[] = $route->uri(array('file' => 'js/jquery-1.9.1.js'));
         $this->template->scripts[] = $route->uri(array('file' => 'js/jquery-ui-1.9.2.custom.js'));
+        $this->template->scripts[] = $route->uri(array('file' => 'js/tinymce/tiny_mce.js'));
+
         $this->template->scripts[] = $route->uri(array('file' => 'js/tinymce/jquery.tinymce.js'));
         $this->template->scripts[] = $route->uri(array('file' => 'js/edit.js'));
 
         $this->template->page = "structure";
+    }
 
+    public function action_edit()
+    {
+        $this->addCssAnsJs();
         $structure = (new Model_ORM_Structure)->getTreeAsArray();
 
         $id = (int) $this->request->param('id');
+
+//        Debug::vars($id);
 
         $structureList = View::factory('structure/list.tpl')
                 ->set('left_menu_arr', $structure)
                 ->set('param', $id)
                 ->render();
 
-        $article = ORM::factory('ORM_Articles')->findArticle($id);
+        $article = ORM::factory('ORM_Articles')
+                ->findArticle($id);
 
-        $roles = ORM::factory('ORM_Roles')->find_all()
+        $roles = ORM::factory('ORM_Roles')
+                ->find_all()
                 ->showAsArray('name', 'description');
 
         $this->content = View::factory('structure/content.tpl')
@@ -82,7 +87,6 @@ class Controller_Structure extends Kohana_Controller_Template {
      */
     public function action_add()
     {
-
         $structure        = ORM::factory('ORM_Structure');
         $structure->title = "Новое поле";
         $cat              = $this->request->param('id');
@@ -100,21 +104,18 @@ class Controller_Structure extends Kohana_Controller_Template {
     }
 
     /**
-     *
+     * редактировать статью
      */
-    public function action_changeartical()
+    public function action_changearticle()
     {
-
-        $id = $this->request->param('id');
-
+        $id   = $this->request->param('id');
         $post = $this->request->post();
 
-        $artical = ORM::factory('ORM_Articles')
+        $article = ORM::factory('ORM_Articles')
                 ->where('parent_id', '=', $id)
                 ->find();
 
-
-        $artical->parent_id = $id;
+        $article->parent_id = $id;
         $keyes              = array(
             'text', 'link', 'language', 'visible', 'namehtml', 'role'
         );
@@ -126,17 +127,19 @@ class Controller_Structure extends Kohana_Controller_Template {
             if (isset($post[$key])) {
                 $val = $post[$key];
             }
+
             if ($key === 'visible') {
                 $val = isset($post[$key]) ? 1 : 0;
             }
 
-            $artical->$key = $val;
+            $article->$key = $val;
         }
 
-        $artical->save();
+        $article->save();
 
         //А теперь займемся структуркой
-        $link = ORM::factory('ORM_Structure')->where('id', '=', $id)
+        $link = ORM::factory('ORM_Structure')
+                ->where('id', '=', $id)
                 ->find();
 
         if ($_FILES['logotip']['error'] == 0) {
@@ -153,19 +156,26 @@ class Controller_Structure extends Kohana_Controller_Template {
             ));
 
             if ($validation->check()) {
-                Upload::save($validation['logotip'], $_FILES['logotip']['name'], MEDIA .
-                        "img/icons");
+
+//                $routeMedia = Route::get("structure/media");
+//                $link       = $routeMedia->uri(array("file" => "img/icons"));
+
+                Upload::save($validation['logotip'], $_FILES['logotip']['name'], $this->uploadPath);
+
                 $link->img = $_FILES['logotip']['name'];
             }
         }
 
         $link->title = $post['title'];
-
         $link->update();
 
         $this->request->redirect("structure/index/{$id}");
     }
 
+    /**
+     * двигать
+     * @return boolean
+     */
     public function action_move()
     {
         $id  = $this->request->param('id');

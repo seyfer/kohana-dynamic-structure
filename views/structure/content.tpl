@@ -4,7 +4,7 @@
 
 <div class='oneline work_field'>
     {if !empty($id)}
-        <form action='structure/changearticle/{$id}' method="POST"
+        <form action='/structure/changearticle/{$id}' method="POST"
               enctype="multipart/form-data">
 
             <h2>{$article.title}</h2>
@@ -16,14 +16,17 @@
                     <span class='settings-label'>Title</span>
                     <input type='text' name='title' value='{$article.title}'>
                 </div>
+
                 <div class='settings'>
                     <span class='settings-label'>Иконка кнопки</span>
                     <input type='file' name='logotip'>
                     {if !empty($article.img)}<img src='/media/img/icons/{$article.img}'>{/if}
                 </div>
+
                 <div class='settings'>
                     <span class='settings-label'>Ссылка</span> <input type='text' name='link' value='{$article.link}'>
                 </div>
+
                 <div class='settings'>
                     <span class='settings-label'>Язык</span> <select name="language">
                         <option value="RU"
@@ -34,10 +37,12 @@
                         </option>
                     </select>
                 </div>
+
                 <div class='settings'>
                     <span class='settings-label'>Доступность пользователям</span>
                     {html_options options=$roles name='role' selected=$article.role}
                 </div>
+
                 <div class='settings'>
                     <span class='settings-label'>Отображать на сайте</span>
                     <input type='checkbox' name='visible' {if $article.visible}checked{/if}>
@@ -51,6 +56,5 @@
         </form>
 
     {/if}
-
 
 </div>
