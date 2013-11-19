@@ -20,7 +20,7 @@
                 <div class='settings'>
                     <span class='settings-label'>Иконка кнопки</span>
                     <input type='file' name='logotip'>
-                    {if !empty($article.img)}<img src='/media/img/icons/{$article.img}'>{/if}
+                    {if !empty($article.img)}<img src='/structure/upload/{$article.img}'>{/if}
                 </div>
 
                 <div class='settings'>

@@ -1,4 +1,4 @@
-/* 
+/*
     Document   : main
     Created on : 26.10.2013, 11:23:14
     Author     : alex
@@ -6,7 +6,7 @@
         Purpose of the stylesheet follows.
 */
 
-root { 
+root {
     display: block;
 }
 
@@ -63,7 +63,7 @@ body{
 }
 
 .deleteStruct{
-    background: url('/media/img/delete.png');
+    background: url('/structure/media/img/delete.png');
     background-repeat: no-repeat;
     width:24px;
     height:24px;
@@ -71,7 +71,7 @@ body{
 }
 
 .addStruct{
-    background: url('/media/img/add.png');
+    background: url('/structure/media/img/add.png');
     background-repeat: no-repeat;
     width:24px;
     height:24px;
@@ -85,7 +85,7 @@ body{
     position: relative;
     padding:10px 5px;
     border-radius:5px;
-    
+
     background: #bfd255; /* Old browsers */
     background: -moz-linear-gradient(top,  #bfd255 0%, #8eb92a 47%, #9ecb2d 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#bfd255), color-stop(47%,#8eb92a), color-stop(100%,#9ecb2d)); /* Chrome,Safari4+ */
@@ -97,7 +97,7 @@ body{
 
     background-size: 100% 80px;
     background-position: 0 0px;
-    
+
     border:1px solid greenyellow;
 }
 

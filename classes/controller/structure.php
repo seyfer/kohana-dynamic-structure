@@ -37,17 +37,18 @@ class Controller_Structure extends Kohana_Controller_Template {
         $this->template->styles  = array();
         $this->template->scripts = array();
 
-        $route = Route::get('structure/media');
+        $routeMedia  = Route::get('structure/media');
+        $routeVendor = Route::get('structure/vendor');
 
-        $this->template->styles[] = $route->uri(array('file' => 'css/admin.css'));
-        $this->template->styles[] = $route->uri(array('file' => 'css/content.css'));
+//        $this->template->styles[] = $routeMedia->uri(array('file' => 'css/admin.css'));
+        $this->template->styles[] = $routeMedia->uri(array('file' => 'css/content.css'));
 
-        $this->template->scripts[] = $route->uri(array('file' => 'js/jquery-1.9.1.js'));
-        $this->template->scripts[] = $route->uri(array('file' => 'js/jquery-ui-1.9.2.custom.js'));
-        $this->template->scripts[] = $route->uri(array('file' => 'js/tinymce/tiny_mce.js'));
+        $this->template->scripts[] = $routeMedia->uri(array('file' => 'js/jquery-1.9.1.js'));
+        $this->template->scripts[] = $routeMedia->uri(array('file' => 'js/jquery-ui-1.9.2.custom.js'));
+        $this->template->scripts[] = $routeVendor->uri(array('file' => 'tinymce/js/tinymce/tinymce.min.js'));
+        $this->template->scripts[] = $routeVendor->uri(array('file' => 'tinymce/js/tinymce/jquery.tinymce.min.js'));
 
-        $this->template->scripts[] = $route->uri(array('file' => 'js/tinymce/jquery.tinymce.js'));
-        $this->template->scripts[] = $route->uri(array('file' => 'js/edit.js'));
+        $this->template->scripts[] = $routeMedia->uri(array('file' => 'js/edit.js'));
 
         $this->template->page = "structure";
     }
@@ -244,14 +245,40 @@ class Controller_Structure extends Kohana_Controller_Template {
      */
     public function action_media()
     {
+        $this->getFileContent($this->request->action());
+    }
+
+    /**
+     * Displays media files
+     */
+    public function action_vendor()
+    {
+        $this->getFileContent($this->request->action());
+    }
+
+    /**
+     * Displays media files
+     */
+    public function action_upload()
+    {
+        $this->getFileContent($this->request->action());
+    }
+
+    /**
+     *
+     * @param type $dir
+     */
+    private function getFileContent($dir)
+    {
         // Get the file path from the request
         $file = $this->request->param('file');
 
         // Find the file extension
         $path = pathinfo($file);
 
-        // Array ( [dirname] => css [basename] => reset.css [extension] => css [filename] => reset )
-        $file = Kohana::find_file('media', $path['dirname'] .
+        // Array ( [dirname] => css [basename] => reset.css
+        // [extension] => css [filename] => reset )
+        $file = Kohana::find_file($dir, $path['dirname'] .
                         DIRECTORY_SEPARATOR . $path['filename'], $path['extension']);
 
         if ($file) {

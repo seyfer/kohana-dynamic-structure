@@ -16,7 +16,7 @@
 
                 {if $entry.visible}
                     <div class='oneline'>
-                        <img src='/public/img/eyeBig.png' style='width:14px;height:14px;'>
+                        <img src='/structure/media/img/eyeBig.png' style='width:14px;height:14px;'>
                     </div>
                 {/if}
 
@@ -24,7 +24,7 @@
                     <a href="/structure/edit/{$entry.id}" class="red_link dir">
                         {if !empty($entry.img)}
                             <div class='oneline'>
-                                <img src='/media/img/icons/{$entry.img}'>
+                                <img src='/structure/upload/{$entry.img}'>
                             </div>
                         {/if}
                         <div class='oneline'>{$entry.title|truncate:10}</div>
