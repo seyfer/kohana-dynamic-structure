@@ -103,9 +103,8 @@ body{
 
 .elementMenu:hover{
     background-position: 0 40px;
+    z-index: 1000;
 }
-
-
 
 .elementMenu a{
     color:black;

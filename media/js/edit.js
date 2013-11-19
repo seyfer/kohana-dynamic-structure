@@ -1,47 +1,52 @@
-//$(document).ready(function() {
-//    alert(1);
-//});
-
 $(function() {
 
     $("#showSettings").click(function() {
-        if ($("#settings").css('display') == 'none')
-            $("#settings").show();
+        var settings = $("#settings");
+        if (settings.css('display') == 'none')
+            settings.show();
         else
-            $("#settings").hide();
+            settings.hide();
     });
 
     var selectMenu;
 
     //Перемещение
     $(".elementMenu").draggable({
-        'drag': function(event, ui) {
-            var element = $(this);
+        "zIndex": 100,
+        "drag": function(event, ui) {
             div = ui.helper.find(".elementMenu");
-            element.css('z-index', -1);
         },
-        'stop': function(event, ui) {
+        "stop": function(event, ui) {
             var element = $(this);
 
             nom = element.attr('nom');
             nom2 = selectMenu;
 
             if (nom && nom2) {
+                var reqUrl = '/structure/move/' + nom + '/' + nom2;
+                console.log(reqUrl);
+
                 $.ajax({
                     type: "POST",
-                    url: '/structure/move/' + nom + '/' + nom2,
+                    url: reqUrl,
                     data: "{}",
                     success: function(data) {
-                        window.location = window.location;
+                        console.log("success");
+                        console.log(data);
+
+//                        window.location = window.location;
                     },
                     error: function(data) {
+                        console.log("error");
+                        console.log("error" + data.responseText);
+                        console.log("error" + data);
 
-                        window.location = window.location;
+//                        window.location = window.location;
                     }
 
                 });
             } else {
-                window.location = window.location;
+//                window.location = window.location;
             }
         }
     });

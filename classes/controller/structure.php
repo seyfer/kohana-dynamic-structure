@@ -28,8 +28,6 @@ class Controller_Structure extends Kohana_Controller_Template {
                 ->set('struct', $structureList);
 
         $this->template->content = $this->content;
-
-//        echo $this->template;
     }
 
     private function addCssAnsJs()
@@ -40,7 +38,6 @@ class Controller_Structure extends Kohana_Controller_Template {
         $routeMedia  = Route::get('structure/media');
         $routeVendor = Route::get('structure/vendor');
 
-//        $this->template->styles[] = $routeMedia->uri(array('file' => 'css/admin.css'));
         $this->template->styles[] = $routeMedia->uri(array('file' => 'css/content.css'));
 
         $this->template->scripts[] = $routeMedia->uri(array('file' => 'js/jquery-1.9.1.js'));
@@ -67,10 +64,10 @@ class Controller_Structure extends Kohana_Controller_Template {
                 ->set('param', $id)
                 ->render();
 
-        $article = ORM::factory('ORM_Articles')
+        $article = (new Model_ORM_Articles())
                 ->findArticle($id);
 
-        $roles = ORM::factory('ORM_Roles')
+        $roles = (new Model_ORM_Roles())
                 ->find_all()
                 ->showAsArray('name', 'description');
 
@@ -88,7 +85,7 @@ class Controller_Structure extends Kohana_Controller_Template {
      */
     public function action_add()
     {
-        $structure        = ORM::factory('ORM_Structure');
+        $structure        = (new Model_ORM_Structure());
         $structure->title = "Новое поле";
         $cat              = $this->request->param('id');
 
@@ -112,7 +109,7 @@ class Controller_Structure extends Kohana_Controller_Template {
         $id   = $this->request->param('id');
         $post = $this->request->post();
 
-        $article = ORM::factory('ORM_Articles')
+        $article = (new Model_ORM_Articles())
                 ->where('parent_id', '=', $id)
                 ->find();
 
@@ -139,7 +136,7 @@ class Controller_Structure extends Kohana_Controller_Template {
         $article->save();
 
         //А теперь займемся структуркой
-        $link = ORM::factory('ORM_Structure')
+        $link = (new Model_ORM_Structure())
                 ->where('id', '=', $id)
                 ->find();
 
@@ -179,57 +176,75 @@ class Controller_Structure extends Kohana_Controller_Template {
      */
     public function action_move()
     {
+        $this->auto_render = FALSE;
+
         $id  = $this->request->param('id');
         $id2 = $this->request->param('id2');
 
-        $struct1 = ORM::factory('ORM_Structure')
-                ->where('id', '=', $id)
-                ->find();
+        try {
 
-        $struct2 = ORM::factory('ORM_Structure')
-                ->where('id', '=', $id2)
-                ->find();
+            $struct1 = (new Model_ORM_Structure())
+                    ->where('id', '=', $id)
+                    ->find();
 
-        if (!$struct1->parent() && !$struct2->parent()) {
-            $scope          = $struct1->scope;
-            $struct1->scope = $struct2->scope;
-            $struct2->scope = $scope;
-            $struct2->save();
-            $struct1->save();
-            //$struct1->move_to_prev_sibling($id2);
-            return true;
+            $struct2 = (new Model_ORM_Structure())
+                    ->where('id', '=', $id2)
+                    ->find();
+
+            if (!$struct1->loaded() || !$struct2->loaded()) {
+                throw new Exception("one of elements is not finded");
+            }
+
+            if (!$struct1->parent() && !$struct2->parent()) {
+                $scope          = $struct1->scope;
+                $struct1->scope = $struct2->scope;
+                $struct2->scope = $scope;
+                $struct2->save();
+                $struct1->save();
+//                $struct1->move_to_prev_sicbling($id2);
+                return true;
+            }
+
+            if (!$struct1->parent()) {
+                return false;
+            }
+
+            if (!$struct2->parent()) {
+                $struct1->move_to_first_child($id2);
+                return false;
+            }
+
+            if ($struct1->parent()->id != $struct2->parent()->id) {
+                $struct1->move_to_first_child($id2);
+            }
+            else {
+                $struct1->move_to_prev_sibling($id2);
+            }
+
+            (new Model_ORM_Structure())->rebuild_tree();
         }
+        catch (\Exception $exc) {
 
-        if (!$struct1->parent()) {
-            return false;
+            $this->response->body($exc->getMessage());
         }
-
-        if (!$struct2->parent()) {
-            $struct1->move_to_first_child($id2);
-            return false;
-        }
-
-        if ($struct1->parent()->id != $struct2->parent()->id) {
-            $struct1->move_to_first_child($id2);
-        }
-        else {
-            $struct1->move_to_prev_sibling($id2);
-        }
-
-        ORM::factory('Admin_Structure')->rebuild_tree();
     }
 
+    /**
+     * удалить узел
+     */
     public function action_delete()
     {
         echo 1;
 
         $id = $this->request->param('id');
 
-        $link = ORM::factory('ORM_Structure')->where('id', '=', $id)
+        $link = (new Model_ORM_Structure())
+                ->where('id', '=', $id)
                 ->find();
+
         $link->delete();
 
-        $ormArticle = ORM::factory("ORM_Articles")
+        $ormArticle = (new Model_ORM_Articles())
                 ->where('parent_id', '=', $id)
                 ->find();
 
@@ -265,7 +280,8 @@ class Controller_Structure extends Kohana_Controller_Template {
     }
 
     /**
-     *
+     * получить содержимое файла
+     * установить заголовки по типу файла
      * @param type $dir
      */
     private function getFileContent($dir)

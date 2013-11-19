@@ -24,10 +24,8 @@ Route::set('structure/media', 'structure/media(/<file>)', array('file' => '.+'))
             'file'       => NULL,
         ));
 
-Route::set('structure', 'structure(/<action>(/<id>))', array('file' => '.+'))
+Route::set('structure', 'structure(/<action>(/<id>(/<id2>)))')
         ->defaults(array(
             'controller' => 'structure',
             'action'     => 'index',
-            'file'       => NULL,
-//            'directory'  => 'admin/structure',
         ));
