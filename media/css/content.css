@@ -129,5 +129,12 @@ body{
 }
 
 .work_field{
+    display: inline-block;
     margin: 0px 3px;
+    width: 30%;
+}
+
+.content_field {
+    display: inline-block;
+    width: 60%;
 }

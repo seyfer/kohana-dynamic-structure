@@ -11,6 +11,19 @@ class Controller_Structure extends Kohana_Controller_Template {
     //в конфиг
     private $uploadPath = "vendor/kohana/modules/dynamic-menu/upload/";
 
+    public function action_addRoot()
+    {
+//        if ($this->request->post()) {
+        $struct = new Model_ORM_Structure();
+
+        $struct->make_root();
+
+        $this->request->redirect('/structure');
+//        }
+//        $content = View::factory('structure/addRoot.tpl');
+//        $this->template->content = $content;
+    }
+
     public function action_index()
     {
 
@@ -193,6 +206,12 @@ class Controller_Structure extends Kohana_Controller_Template {
 
             if (!$struct1->loaded() || !$struct2->loaded()) {
                 throw new Exception("one of elements is not finded");
+            }
+
+//            Debug::vars($struct1->loaded(),$struct2->loaded());
+            //нельзя переместить родителя в ребенка
+            if ($struct2->parent() && ($struct1->id == $struct2->parent()->id)) {
+                return false;
             }
 
             if (!$struct1->parent() && !$struct2->parent()) {

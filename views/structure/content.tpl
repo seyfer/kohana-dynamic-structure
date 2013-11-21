@@ -2,7 +2,7 @@
     {$struct}
 </div>
 
-<div class='oneline work_field'>
+<div class='oneline content_field'>
     {if !empty($id)}
         <form action='/structure/changearticle/{$id}' method="POST"
               enctype="multipart/form-data">
@@ -20,7 +20,9 @@
                 <div class='settings'>
                     <span class='settings-label'>Иконка кнопки</span>
                     <input type='file' name='logotip'>
-                    {if !empty($article.img)}<img src='/structure/upload/{$article.img}'>{/if}
+                    {if !empty($article.img)}
+                        <img src='/structure/upload/{$article.img}'>
+                    {/if}
                 </div>
 
                 <div class='settings'>
@@ -30,10 +32,12 @@
                 <div class='settings'>
                     <span class='settings-label'>Язык</span> <select name="language">
                         <option value="RU"
-                                {if $article.language=='RU'}selected{/if}>RU
+                                {if $article.language=='RU'}selected{/if}>
+                            RU
                         </option>
                         <option value="EN"
-                                {if $article.language=='EN'}selected{/if}>EN
+                                {if $article.language=='EN'}selected{/if}>
+                            EN
                         </option>
                     </select>
                 </div>
@@ -49,7 +53,11 @@
                 </div>
             </div>
 
-            <textarea class='tinymce' name='text'>{if $article}{$article.text}{/if}</textarea>
+            <textarea class='tinymce' name='text'>
+                {if $article}
+                    {$article.text}
+                {/if}
+            </textarea>
             <br>
             <input type='submit' value='Создать/Изменить'>
             <a href ="/structure/">Назад</a>

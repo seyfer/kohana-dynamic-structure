@@ -14,13 +14,54 @@ $(function() {
     $(".elementMenu").draggable({
         "zIndex": 100,
         "drag": function(event, ui) {
-            div = ui.helper.find(".elementMenu");
-        },
-        "stop": function(event, ui) {
             var element = $(this);
 
+//            div = ui.helper.find(".elementMenu");
+//            element.css('z-index', -1);
+
+        },
+        "stop": function(event, ui) {
+
+            var nom2;
+            var element = $(this);
+            var elements = $(".elementMenu");
+            elements.each(function(index, val) {
+
+//                console.log(val);
+
+                var curElem = $(val);
+                if (curElem.attr("nom") != element.attr("nom")) {
+                    var curCoord = curElem.offset();
+
+                    console.log(curCoord);
+
+                    var elemCoord = element.offset();
+
+                    var curHeight = curElem.height();
+                    var curWidth = curElem.width();
+
+                    console.log("elem");
+                    console.log(elemCoord);
+
+                    if (curCoord.top <= elemCoord.top &&
+                            curCoord.left <= elemCoord.left &&
+                            elemCoord.top <= curCoord.top + curHeight &&
+                            elemCoord.left <= curCoord.left + curWidth)
+                    {
+                        console.log(curElem.attr("nom"));
+
+                        nom2 = curElem.attr("nom");
+                    }
+                }
+
+            });
+
+//            if (!nom2)
+//                return false;
+//            element.css('z-index', -1);
+
             nom = element.attr('nom');
-            nom2 = selectMenu;
+//            nom2 = selectMenu;
 
             if (nom && nom2) {
                 var reqUrl = '/structure/move/' + nom + '/' + nom2;
@@ -34,19 +75,19 @@ $(function() {
                         console.log("success");
                         console.log(data);
 
-//                        window.location = window.location;
+                        window.location = window.location;
                     },
                     error: function(data) {
                         console.log("error");
                         console.log("error" + data.responseText);
                         console.log("error" + data);
 
-//                        window.location = window.location;
+                        window.location = window.location;
                     }
 
                 });
             } else {
-//                window.location = window.location;
+                window.location = window.location;
             }
         }
     });
