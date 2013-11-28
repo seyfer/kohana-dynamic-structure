@@ -7,34 +7,49 @@ class Controller_Structure extends Kohana_Controller_Template {
     /**
      * @var   string   The path to the template view.
      */
-    public $template    = 'structure/main.tpl';
-    //в конфиг
+    public $template = 'structure/main.tpl';
+
+    /**
+     * вынести в конфиг
+     */
     private $uploadPath = "vendor/kohana/modules/dynamic-menu/upload/";
 
-    public function action_addRoot()
+    /**
+     *
+     * @var \Structure
+     */
+    private $modelStructure;
+    private $modelStructureArticle;
+    private $modelStructureRole;
+
+    public function before()
     {
-//        if ($this->request->post()) {
-        $struct = new Model_ORM_Structure();
+        parent::before();
 
-        $struct->make_root();
-
-        $this->request->redirect('/structure');
-//        }
-//        $content = View::factory('structure/addRoot.tpl');
-//        $this->template->content = $content;
+        $this->modelStructure = new Structure();
     }
 
+    /**
+     * добавить корневой узел
+     */
+    public function action_addRoot()
+    {
+        $this->modelStructure->addRoot();
+
+        $this->request->redirect('/structure');
+    }
+
+    /**
+     * главная, только список
+     */
     public function action_index()
     {
-
         $this->addCssAnsJs();
-        $structure = (new Model_ORM_Structure)->getTreeAsArray();
 
-        $id = (int) $this->request->param('id');
+        $structure = $this->modelStructure->getTreeAsArray();
 
         $structureList = View::factory('structure/list.tpl')
                 ->set('left_menu_arr', $structure)
-                ->set('param', $id)
                 ->render();
 
         $this->content = View::factory('structure/content.tpl')
@@ -43,6 +58,9 @@ class Controller_Structure extends Kohana_Controller_Template {
         $this->template->content = $this->content;
     }
 
+    /**
+     * загрузить нужные стили и скрипты
+     */
     private function addCssAnsJs()
     {
         $this->template->styles  = array();
@@ -63,14 +81,16 @@ class Controller_Structure extends Kohana_Controller_Template {
         $this->template->page = "structure";
     }
 
+    /**
+     * редактирование узла
+     */
     public function action_edit()
     {
         $this->addCssAnsJs();
-        $structure = (new Model_ORM_Structure)->getTreeAsArray();
+
+        $structure = $this->modelStructure->getTreeAsArray();
 
         $id = (int) $this->request->param('id');
-
-//        Debug::vars($id);
 
         $structureList = View::factory('structure/list.tpl')
                 ->set('left_menu_arr', $structure)
@@ -123,36 +143,23 @@ class Controller_Structure extends Kohana_Controller_Template {
         $post = $this->request->post();
 
         $article = (new Model_ORM_Articles())
-                ->where('parent_id', '=', $id)
-                ->find();
+                ->findByParent($id);
 
-        $article->parent_id = $id;
-        $keyes              = array(
-            'text', 'link', 'language', 'visible', 'namehtml', 'role'
-        );
-
-        //Убираем лишнии интервалы
-        $post['text'] = str_replace('<p>&nbsp;</p>', '', $post['text']);
-
-        foreach ($keyes as $key) {
-            if (isset($post[$key])) {
-                $val = $post[$key];
-            }
-
-            if ($key === 'visible') {
-                $val = isset($post[$key]) ? 1 : 0;
-            }
-
-            $article->$key = $val;
-        }
-
-        $article->save();
+        $article->savePost($post);
 
         //А теперь займемся структуркой
         $link = (new Model_ORM_Structure())
-                ->where('id', '=', $id)
-                ->find();
+                ->findById($id);
 
+        $link->img   = $this->processFileUpload();
+        $link->title = $post['title'];
+        $link->update();
+
+        $this->request->redirect("structure/index/{$id}");
+    }
+
+    private function processFileUpload()
+    {
         if ($_FILES['logotip']['error'] == 0) {
 
             $validation = Validation::factory($_FILES)
@@ -167,20 +174,13 @@ class Controller_Structure extends Kohana_Controller_Template {
             ));
 
             if ($validation->check()) {
-
-//                $routeMedia = Route::get("structure/media");
-//                $link       = $routeMedia->uri(array("file" => "img/icons"));
-
                 Upload::save($validation['logotip'], $_FILES['logotip']['name'], $this->uploadPath);
 
-                $link->img = $_FILES['logotip']['name'];
+                return $_FILES['logotip']['name'];
             }
         }
 
-        $link->title = $post['title'];
-        $link->update();
-
-        $this->request->redirect("structure/index/{$id}");
+        return FALSE;
     }
 
     /**
@@ -193,6 +193,8 @@ class Controller_Structure extends Kohana_Controller_Template {
 
         $id  = $this->request->param('id');
         $id2 = $this->request->param('id2');
+
+        Debug::vars($id, $id2);
 
         try {
 
@@ -208,7 +210,8 @@ class Controller_Structure extends Kohana_Controller_Template {
                 throw new Exception("one of elements is not finded");
             }
 
-//            Debug::vars($struct1->loaded(),$struct2->loaded());
+            Debug::vars($struct1->loaded(), $struct2->loaded());
+
             //нельзя переместить родителя в ребенка
             if ($struct2->parent() && ($struct1->id == $struct2->parent()->id)) {
                 return false;
@@ -220,7 +223,7 @@ class Controller_Structure extends Kohana_Controller_Template {
                 $struct2->scope = $scope;
                 $struct2->save();
                 $struct1->save();
-//                $struct1->move_to_prev_sicbling($id2);
+                $struct1->move_to_prev_sicbling($id2);
                 return true;
             }
 
@@ -232,6 +235,8 @@ class Controller_Structure extends Kohana_Controller_Template {
                 $struct1->move_to_first_child($id2);
                 return false;
             }
+
+            Debug::vars($struct1->parent()->id, $struct2->parent()->id);
 
             if ($struct1->parent()->id != $struct2->parent()->id) {
                 $struct1->move_to_first_child($id2);
@@ -253,13 +258,10 @@ class Controller_Structure extends Kohana_Controller_Template {
      */
     public function action_delete()
     {
-        echo 1;
-
         $id = $this->request->param('id');
 
         $link = (new Model_ORM_Structure())
-                ->where('id', '=', $id)
-                ->find();
+                ->findById($id);
 
         $link->delete();
 
@@ -306,10 +308,10 @@ class Controller_Structure extends Kohana_Controller_Template {
     private function getFileContent($dir)
     {
         // Get the file path from the request
-        $file = $this->request->param('file');
+        $fileParam = $this->request->param('file');
 
         // Find the file extension
-        $path = pathinfo($file);
+        $path = pathinfo($fileParam);
 
         // Array ( [dirname] => css [basename] => reset.css
         // [extension] => css [filename] => reset )

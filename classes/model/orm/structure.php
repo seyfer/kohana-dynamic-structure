@@ -2,6 +2,9 @@
 
 defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * модель структуры
+ */
 class Model_ORM_Structure extends ORM_MPTT {
 
     protected $_table_name  = 'structure';
@@ -42,7 +45,8 @@ class Model_ORM_Structure extends ORM_MPTT {
     {
         //создали элемент для цикла
         $elements = $dataSet;
-        $result   = array();
+
+        $result = array();
         foreach ($elements as $id => $value) {
             if ($value['parent_id'] > 0 && isset($elements[$value['parent_id']])) {
 
@@ -70,7 +74,6 @@ class Model_ORM_Structure extends ORM_MPTT {
      */
     public function getTreeAsArray()
     {
-
         $this->clear();
 
         $struct = $this->fulltree()->as_array();
@@ -86,6 +89,16 @@ class Model_ORM_Structure extends ORM_MPTT {
         }
 
         return self::getStruct($dataSet);
+    }
+
+    /**
+     * найти по ид
+     * @param type $id
+     * @return type
+     */
+    public function findById($id)
+    {
+        return $this->where("id", "=", $id)->find();
     }
 
 }

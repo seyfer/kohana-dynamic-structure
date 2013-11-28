@@ -5,15 +5,13 @@
             <div class='row elementMenu' nom='{$entry.id}'
                  style='margin-left:{($entry.lvl-1)*50}px'>
 
-                <div class='oneline addStruct'
-                     onClick="location.href = '/structure/add/{$entry.id}'">
+                <div class='oneline addStruct'>
+                    <a href = '/structure/add/{$entry.id}'></a>
                 </div>
 
-                {if $entry.lvl!=1}
-                    <div class='oneline deleteStruct'
-                         onClick="location.href = '/structure/delete/{$entry.id}'">
-                    </div>
-                {/if}
+                <div class='oneline deleteStruct'>
+                    <a href ='/structure/delete/{$entry.id}'></a>
+                </div>
 
                 {if $entry.visible}
                     <div class='oneline'>
@@ -43,11 +41,13 @@
             <div class='row elementMenu {if $param==$entry.id}selected{/if}'
                  nom='{$entry.id}' style='margin-left:{($entry.lvl-1)*50}px'>
 
-                <div class='oneline addStruct'
-                     onClick="location.href = '/structure/add/{$entry.id}'"></div>
+                <div class='oneline addStruct'>
+                    <a href = '/structure/add/{$entry.id}'></a>
+                </div>
 
-                <div class='oneline deleteStruct'
-                     onClick="location.href = '/structure/delete/{$entry.id}'"></div>
+                <div class='oneline deleteStruct'>
+                    <a href = '/structure/delete/{$entry.id}'></a>
+                </div>
 
                 {if $entry.visible}
                     <div class='oneline'>
@@ -76,8 +76,9 @@
     {/foreach}
 {/function}
 
-{menu_vert data=$left_menu_arr}
-
 <div>
     <a href ="/structure/addRoot/">Добавить корневой узел</a>
 </div>
+
+{menu_vert data=$left_menu_arr}
+

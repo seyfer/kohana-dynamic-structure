@@ -4,14 +4,14 @@
     "description": "Kohana module to manage menu and articles quick and easy",
     "author": "Oleg Abrazhaev <seyferseed@mail.ru>",
     "dependencies": {
-        "tinymce": "2.1"
+        "tinymce": "4.0.10"
     },
     "repositories": [
         {
             "type": "package",
             "package": {
                 "name": "tinymce",
-                "version": "2.1",
+                "version": "4.0.10",
                 "dist": {
                     "url": "http://download.moxiecode.com/tinymce/tinymce_4.0.10.zip",
                     "type": "zip"

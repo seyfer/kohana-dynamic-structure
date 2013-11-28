@@ -1,24 +1,44 @@
 $(function() {
 
-    $("#showSettings").click(function() {
-        var settings = $("#settings");
-        if (settings.css('display') == 'none')
-            settings.show();
-        else
-            settings.hide();
+    /**
+     * удаление
+     */
+    $(".deleteStruct").click(function(e) {
+
+        if (!confirm("Вы уверены, что хотите удалить узел?")) {
+            return false;
+        }
+
+        window.location = $(this).find("a").prop("href");
+
     });
 
-    var selectMenu;
+    $(".addStruct").click(function() {
+        window.location = $(this).find("a").prop("href");
+    });
 
-    //Перемещение
+    /**
+     * настройки
+     */
+    $("#showSettings").click(function() {
+        var settings = $("#settings");
+
+        if (settings.css('display') == 'none') {
+            settings.show();
+        }
+        else {
+            settings.hide();
+        }
+    });
+
+    /**
+     * Перемещение
+     */
     $(".elementMenu").draggable({
         "zIndex": 100,
         "drag": function(event, ui) {
-            var element = $(this);
-
-//            div = ui.helper.find(".elementMenu");
+//            var element = $(this);
 //            element.css('z-index', -1);
-
         },
         "stop": function(event, ui) {
 
@@ -26,8 +46,6 @@ $(function() {
             var element = $(this);
             var elements = $(".elementMenu");
             elements.each(function(index, val) {
-
-//                console.log(val);
 
                 var curElem = $(val);
                 if (curElem.attr("nom") != element.attr("nom")) {
@@ -56,12 +74,7 @@ $(function() {
 
             });
 
-//            if (!nom2)
-//                return false;
-//            element.css('z-index', -1);
-
             nom = element.attr('nom');
-//            nom2 = selectMenu;
 
             if (nom && nom2) {
                 var reqUrl = '/structure/move/' + nom + '/' + nom2;
@@ -75,31 +88,31 @@ $(function() {
                         console.log("success");
                         console.log(data);
 
-                        window.location = window.location;
+                        refresh();
                     },
                     error: function(data) {
                         console.log("error");
                         console.log("error" + data.responseText);
                         console.log("error" + data);
 
-                        window.location = window.location;
+                        refresh();
                     }
 
                 });
             } else {
-                window.location = window.location;
+                refresh();
             }
         }
     });
 
-    $(".elementMenu").mouseover(function() {
-        selectMenu = $(this).attr('nom');
-    });
+    function refresh()
+    {
+        window.location = window.location;
+    }
 
-    $(".elementMenu").mouseout(function() {
-        selectMenu = 0;
-    });
-
+    /**
+     * баннер?
+     */
     $("#allBaners").change(function() {
         location.href = '/other/baner/' + $("#allBaners :selected").val();
     });
