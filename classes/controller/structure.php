@@ -133,18 +133,10 @@ class Controller_Structure extends Kohana_Controller_Template {
      */
     public function action_add()
     {
-        $structure        = (new Model_ORM_Structure());
-        $structure->title = "Новое поле";
-        $cat              = $this->request->param('id');
+        $parent_id = $this->request->param('id');
 
-        if (!$cat) {
-            $structure->make_root();
-        }
-        else {
-            $structure->insert_as_last_child($cat);
-        }
-
-        $id = $structure->id;
+        $id = (new Model_ORM_Structure())
+                ->addNewElement($parent_id);
 
         $this->request->redirect("structure/edit/{$id}");
     }
@@ -157,18 +149,17 @@ class Controller_Structure extends Kohana_Controller_Template {
         $id   = $this->request->param('id');
         $post = $this->request->post();
 
-        $article = (new Model_ORM_Articles())
-                ->findByParent($id);
+        //сохранить статью
+        (new Model_ORM_Articles())
+                ->findByParent($id)
+                ->savePost($post);
 
-        $article->savePost($post);
-
-        //А теперь займемся структуркой
-        $link = (new Model_ORM_Structure())
-                ->findById($id);
-
-        $link->img   = $this->processFileUpload();
-        $link->title = $post['title'];
-        $link->update();
+        //А теперь займемся структурой
+        (new Model_ORM_Structure())
+                ->findById($id)
+                ->setImg($this->processFileUpload())
+                ->setTitle($post['title'])
+                ->update();
 
         $this->request->redirect("structure/index/{$id}");
     }

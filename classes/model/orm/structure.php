@@ -21,6 +21,18 @@ class Model_ORM_Structure extends ORM_MPTT {
         ),
     );
 
+    public function setImg($img)
+    {
+        $this->img = $img;
+        return $this;
+    }
+
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
     /**
      * Переобъявили, так как по другому перемещение внутри узла я сделать не смог
      */
@@ -94,11 +106,31 @@ class Model_ORM_Structure extends ORM_MPTT {
     /**
      * найти по ид
      * @param type $id
-     * @return \ORM_MPTT
+     * @return \Model_ORM_Structure
      */
     public function findById($id)
     {
         return $this->where("id", "=", $id)->find();
+    }
+
+    /**
+     * добавить элемент
+     * @param type $parent_id
+     * @return type
+     */
+    public function addNewElement($parent_id = NULL)
+    {
+        $this->clear();
+        $this->title = "Новое поле";
+
+        if (!$parent_id) {
+            $this->make_root();
+        }
+        else {
+            $this->insert_as_last_child($parent_id);
+        }
+
+        return $this->id;
     }
 
 }
