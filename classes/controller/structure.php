@@ -12,21 +12,35 @@ class Controller_Structure extends Kohana_Controller_Template {
     /**
      * вынести в конфиг
      */
-    private $uploadPath = "vendor/kohana/modules/dynamic-menu/upload/";
+    private $uploadPath;
 
     /**
      *
      * @var \Structure
      */
     private $modelStructure;
+
+    /**
+     *
+     * @var \Structure_Article
+     */
     private $modelStructureArticle;
+
+    /**
+     *
+     * @var \Structure_Role
+     */
     private $modelStructureRole;
 
     public function before()
     {
         parent::before();
 
-        $this->modelStructure = new Structure();
+        $this->modelStructure        = new Structure();
+        $this->modelStructureArticle = new Structure_Article();
+        $this->modelStructureRole    = new Structure_Role();
+
+        $this->uploadPath = MODPATH . "/dynamic-menu/upload/";
     }
 
     /**
@@ -101,14 +115,15 @@ class Controller_Structure extends Kohana_Controller_Template {
                 ->findArticle($id);
 
         $roles = (new Model_ORM_Roles())
-                ->find_all()
-                ->showAsArray('name', 'description');
+                ->find_all();
+
+        $rolesArr = (new Model_ORM_Roles())->showAsArray($roles, 'description');
 
         $this->content = View::factory('structure/content.tpl')
                 ->set('struct', $structureList)
                 ->set('id', $id)
                 ->set('article', $article)
-                ->set('roles', $roles);
+                ->set('roles', $rolesArr);
 
         $this->template->content = $this->content;
     }
@@ -158,6 +173,10 @@ class Controller_Structure extends Kohana_Controller_Template {
         $this->request->redirect("structure/index/{$id}");
     }
 
+    /**
+     * загрузка иконок
+     * @return boolean
+     */
     private function processFileUpload()
     {
         if ($_FILES['logotip']['error'] == 0) {
@@ -238,13 +257,10 @@ class Controller_Structure extends Kohana_Controller_Template {
 
             Debug::vars($struct1->parent()->id, $struct2->parent()->id);
 
-            if ($struct1->parent()->id != $struct2->parent()->id) {
-                $struct1->move_to_first_child($id2);
-            }
-            else {
-                $struct1->move_to_prev_sibling($id2);
-            }
+            //по умолчанию
+            $struct1->move_to_first_child($id2);
 
+            //перестроить дерево
             (new Model_ORM_Structure())->rebuild_tree();
         }
         catch (\Exception $exc) {
@@ -260,18 +276,9 @@ class Controller_Structure extends Kohana_Controller_Template {
     {
         $id = $this->request->param('id');
 
-        $link = (new Model_ORM_Structure())
-                ->findById($id);
+        $this->modelStructure->delete($id);
 
-        $link->delete();
-
-        $ormArticle = (new Model_ORM_Articles())
-                ->where('parent_id', '=', $id)
-                ->find();
-
-        if ($ormArticle->loaded()) {
-            $ormArticle->delete();
-        }
+        $this->modelStructureArticle->deleteByParent($id);
 
         $this->request->redirect("structure/index");
     }

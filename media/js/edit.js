@@ -51,22 +51,22 @@ $(function() {
                 if (curElem.attr("nom") != element.attr("nom")) {
                     var curCoord = curElem.offset();
 
-                    console.log(curCoord);
+//                    console.log(curCoord);
 
                     var elemCoord = element.offset();
 
                     var curHeight = curElem.height();
                     var curWidth = curElem.width();
 
-                    console.log("elem");
-                    console.log(elemCoord);
+//                    console.log("elem");
+//                    console.log(elemCoord);
 
                     if (curCoord.top <= elemCoord.top &&
                             curCoord.left <= elemCoord.left &&
                             elemCoord.top <= curCoord.top + curHeight &&
                             elemCoord.left <= curCoord.left + curWidth)
                     {
-                        console.log(curElem.attr("nom"));
+//                        console.log(curElem.attr("nom"));
 
                         nom2 = curElem.attr("nom");
                     }
@@ -78,22 +78,22 @@ $(function() {
 
             if (nom && nom2) {
                 var reqUrl = '/structure/move/' + nom + '/' + nom2;
-                console.log(reqUrl);
+//                console.log(reqUrl);
 
                 $.ajax({
                     type: "POST",
                     url: reqUrl,
                     data: "{}",
                     success: function(data) {
-                        console.log("success");
-                        console.log(data);
+//                        console.log("success");
+//                        console.log(data);
 
                         refresh();
                     },
                     error: function(data) {
-                        console.log("error");
-                        console.log("error" + data.responseText);
-                        console.log("error" + data);
+//                        console.log("error");
+//                        console.log("error" + data.responseText);
+//                        console.log("error" + data);
 
                         refresh();
                     }

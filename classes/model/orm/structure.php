@@ -94,7 +94,7 @@ class Model_ORM_Structure extends ORM_MPTT {
     /**
      * найти по ид
      * @param type $id
-     * @return type
+     * @return \ORM_MPTT
      */
     public function findById($id)
     {

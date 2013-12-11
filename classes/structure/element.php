@@ -1,11 +1,29 @@
 <?php
 
-defined('SYSPATH') OR die('No direct script access.');
+/**
+ * Description of element
+ *
+ * @author seyfer
+ */
+class Structure_Element extends Database_Result {
 
-abstract class Database_Result extends Kohana_Database_Result {
+    public function __destruct()
+    {
+        return parent::__destruct();
+    }
+
+    public function current()
+    {
+        return parent::current();
+    }
+
+    public function seek($position)
+    {
+        return parent::seek($position);
+    }
 
     /**
-     *
+     * не используется
      * @param type $primaryKey имя ключа массвиа
      * @param type $nameNeededValue имя поля массива
      * @return type

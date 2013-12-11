@@ -30,6 +30,20 @@ class Structure {
         return $this->modelStructure->getTreeAsArray();
     }
 
-    
+    /**
+     *
+     * @param type $id
+     */
+    public function delete($id)
+    {
+        $this->modelStructure->clear();
+
+        $link = $this->modelStructure
+                ->findById($id);
+
+        if ($link->loaded()) {
+            return $link->delete();
+        }
+    }
 
 }

@@ -30,6 +30,10 @@ class Model_ORM_Articles extends ORM {
     {
         $article = $this->findByParent($id);
 
+        if (!$article) {
+            return FALSE;
+        }
+
         $result = $article->as_array();
 
         $result["title"] = $article->structure->title;
@@ -46,6 +50,11 @@ class Model_ORM_Articles extends ORM {
     public function findByParent($parentId)
     {
         $this->where('parent_id', '=', $parentId)->find();
+
+        if (!$this->loaded()) {
+            return FALSE;
+        }
+
         $this->parent_id = $parentId;
 
         return $this;
