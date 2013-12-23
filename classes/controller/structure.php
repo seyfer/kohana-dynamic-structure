@@ -114,6 +114,8 @@ class Controller_Structure extends Kohana_Controller_Template {
         $article = (new Model_ORM_Articles())
                 ->findArticle($id);
 
+//        Debug::vars($id, $article);
+
         $roles = (new Model_ORM_Roles())
                 ->find_all();
 
@@ -146,13 +148,20 @@ class Controller_Structure extends Kohana_Controller_Template {
      */
     public function action_changearticle()
     {
-        $id   = $this->request->param('id');
-        $post = $this->request->post();
+        $id                = $this->request->param('id');
+        $post              = $this->request->post();
+        $post['parent_id'] = $id;
 
         //сохранить статью
-        (new Model_ORM_Articles())
-                ->findByParent($id)
-                ->savePost($post);
+        $article = (new Model_ORM_Articles())
+                ->findByParent($id);
+
+        if ($article) {
+            $article->savePost($post);
+        }
+        else {
+            (new Model_ORM_Articles())->savePost($post);
+        }
 
         //А теперь займемся структурой
         (new Model_ORM_Structure())

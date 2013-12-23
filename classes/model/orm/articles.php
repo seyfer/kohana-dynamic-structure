@@ -49,6 +49,8 @@ class Model_ORM_Articles extends ORM {
      */
     public function findByParent($parentId)
     {
+//        Debug::vars($parentId);
+
         $this->where('parent_id', '=', $parentId)->find();
 
         if (!$this->loaded()) {
@@ -67,7 +69,8 @@ class Model_ORM_Articles extends ORM {
     private function preparePostForSave($post)
     {
         $keyes = array(
-            'text', 'link', 'language', 'visible', 'namehtml', 'role'
+            'text', 'link', 'language', 'visible',
+            'namehtml', 'role', 'parent_id'
         );
 
         //Убираем лишнии интервалы
