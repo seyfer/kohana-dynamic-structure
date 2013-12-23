@@ -34,7 +34,8 @@ class Model_ORM_Structure extends ORM_MPTT {
     }
 
     /**
-     * Переобъявили, так как по другому перемещение внутри узла я сделать не смог
+     * Переобъявили, так как по другому
+     * перемещение внутри узла я сделать не смог
      */
     protected function lock()
     {
@@ -53,14 +54,15 @@ class Model_ORM_Structure extends ORM_MPTT {
      * @param type $dataSet
      * @return int
      */
-    public static function getStruct($dataSet)
+    protected function formStructure($dataSet)
     {
         //создали элемент для цикла
         $elements = $dataSet;
 
         $result = array();
         foreach ($elements as $id => $value) {
-            if ($value['parent_id'] > 0 && isset($elements[$value['parent_id']])) {
+            if ($value['parent_id'] > 0 &&
+                    isset($elements[$value['parent_id']])) {
 
                 $elements[$id]['parent']                     = & $elements[$value['parent_id']];
                 $elements[$value['parent_id']]['children'][] = & $elements[$id];
@@ -84,15 +86,65 @@ class Model_ORM_Structure extends ORM_MPTT {
      * получить с базы дерево
      * @return type
      */
-    public function getTreeAsArray()
+    public function getFullTreeAsArray()
     {
         $this->clear();
 
-        $struct = $this->fulltree()->as_array();
+        $struct = $this->getFullTree();
 
-        $dataSet = array();
+        return $this->prepareStructure($struct);
+    }
 
-        //Пробежались по дереву
+    /**
+     * полное дерево ORM_MPTT
+     * @return type
+     */
+    public function getFullTree()
+    {
+        return $this->fulltree()->as_array();
+    }
+
+    /**
+     * главные узлы ORM_MPTT
+     * @return type
+     */
+    public function getRoots()
+    {
+        $this->clear();
+
+        return $this->roots()->as_array();
+    }
+
+    /**
+     * получить корневые узлы
+     * @return type
+     */
+    public function getRootsAsArray()
+    {
+        $struct = $this->getRoots();
+
+        return $this->prepareStructure($struct);
+    }
+
+    /**
+     * подготовить формат массива
+     * @param type $struct
+     * @return type
+     */
+    public function prepareStructure($struct)
+    {
+        $dataSet = $this->prepareDataSet($struct);
+
+        return $this->formStructure($dataSet);
+    }
+
+    /**
+     * подготовка данных с настройками
+     * @param type $struct
+     * @return array
+     */
+    protected function prepareDataSet($struct)
+    {
         foreach ($struct as $cat) {
             $categ                             = $cat->as_array();
             $categ['visible']                  = $cat->article->visible;
@@ -100,7 +152,7 @@ class Model_ORM_Structure extends ORM_MPTT {
             $dataSet[$categ['id']]['children'] = array();
         }
 
-        return self::getStruct($dataSet);
+        return $dataSet;
     }
 
     /**

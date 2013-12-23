@@ -49,8 +49,6 @@ class Model_ORM_Articles extends ORM {
      */
     public function findByParent($parentId)
     {
-//        Debug::vars($parentId);
-
         $this->where('parent_id', '=', $parentId)->find();
 
         if (!$this->loaded()) {

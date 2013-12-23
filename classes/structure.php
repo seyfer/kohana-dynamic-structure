@@ -27,7 +27,60 @@ class Structure {
 
     public function getTreeAsArray()
     {
-        return $this->modelStructure->getTreeAsArray();
+        return $this->modelStructure->getFullTreeAsArray();
+    }
+
+    public function getRootsAsArray()
+    {
+        return $this->modelStructure->getRootsAsArray();
+    }
+
+    public function getRootsByNameAsArray($name)
+    {
+        $roots = $this->getRootsByName($name);
+
+        return $this->modelStructure->prepareStructure($roots);
+    }
+
+    public function getRootsByName($name)
+    {
+        $struct = $this->modelStructure->getRoots();
+
+        $filtered = [];
+        foreach ($struct as $each) {
+            if ($each->title == $name) {
+                $filtered[] = $each;
+            }
+        }
+
+        return $filtered;
+    }
+
+    public function getTreeByRootName($name)
+    {
+        $struct = $this->modelStructure->getRoots();
+
+        $tree = [];
+        foreach ($struct as $root) {
+
+            if ($root->title != $name) {
+                continue;
+            }
+
+//            Debug::vars($root);
+
+            $tree[] = $root;
+
+            $leaves = $root->children()->as_array();
+
+//            Debug::vars($leaves);
+
+            $tree = array_merge($tree, $leaves);
+        }
+
+        Debug::vars($tree);
+
+        Debug::vars($this->modelStructure->prepareStructure($tree));
     }
 
     /**
