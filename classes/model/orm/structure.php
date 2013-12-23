@@ -116,6 +116,65 @@ class Model_ORM_Structure extends ORM_MPTT {
     }
 
     /**
+     * получить детей
+     * @return type
+     */
+    public function getChildrens()
+    {
+        return $this->children()->as_array();
+    }
+
+    /**
+     * получить по узлу выборку
+     * дерева
+     * @param type $root
+     * @return type
+     */
+    public function getTreeByNode($root)
+    {
+        Debug::vars(__METHOD__);
+
+        $tree   = [];
+        $tree[] = $root;
+
+        $fullRootTree = $this->getTreeByNodeRecursive($root, $tree);
+
+        return $fullRootTree;
+    }
+
+    /**
+     * вывести заголовки для дебага
+     * @param type $tree
+     */
+    public function treeDebugTitle($tree)
+    {
+        foreach ($tree as $each) {
+            Debug::vars($each->title);
+        }
+    }
+
+    /**
+     * выбирает дерево для узла
+     * @param type $node
+     * @param type $tree
+     * @return type
+     */
+    public function getTreeByNodeRecursive($node, $tree = array())
+    {
+        if ($node->has_children()) {
+
+            $childrens = $node->getChildrens();
+            $tree      = array_merge($tree, $childrens);
+
+            foreach ($childrens as $child) {
+                $tree = $this->getTreeByNodeRecursive($child, $tree);
+            }
+        }
+
+        return $tree;
+    }
+
+    /**
      * получить корневые узлы
      * @return type
      */

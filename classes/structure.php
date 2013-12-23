@@ -56,31 +56,35 @@ class Structure {
         return $filtered;
     }
 
+    /**
+     * получить дерево по корневому узлу
+     * @param type $name
+     */
     public function getTreeByRootName($name)
     {
-        $struct = $this->modelStructure->getRoots();
+        $struct = $this->getRootsByName($name);
 
         $tree = [];
         foreach ($struct as $root) {
-
-            if ($root->title != $name) {
-                continue;
-            }
-
-//            Debug::vars($root);
-
-            $tree[] = $root;
-
-            $leaves = $root->children()->as_array();
-
-//            Debug::vars($leaves);
-
-            $tree = array_merge($tree, $leaves);
+            $tree = $this->modelStructure->getTreeByNode($root);
         }
 
-        Debug::vars($tree);
+//        $this->modelStructure->treeDebugTitle($tree);
+//        Debug::vars($this->modelStructure->prepareStructure($tree));
 
-        Debug::vars($this->modelStructure->prepareStructure($tree));
+        return $tree;
+    }
+
+    /**
+     *
+     * @param type $name
+     * @return type
+     */
+    public function getTreeByRootNameAsArray($name)
+    {
+        $tree = $this->getTreeByRootName($name);
+
+        return $this->modelStructure->prepareStructure($tree);
     }
 
     /**
