@@ -34,19 +34,18 @@ class Model_ORM_Structure extends ORM_MPTT {
     }
 
     /**
-     * Переобъявили, так как по другому
-     * перемещение внутри узла я сделать не смог
+     * фикс для к3.2 +
      */
     protected function lock()
     {
-        $q = 'LOCK TABLE ' . $this->_db->quote_table($this->_table_name) . ' WRITE';
+        $query = 'LOCK TABLE ' . $this->_db->quote_table($this->_table_name) . ' WRITE';
 
         if ($this->_object_name) {
-            $q.= ', ' . $this->_db->quote_table($this->_table_name);
-            $q.= ' AS ' . $this->_db->quote_column($this->_object_name) . ' WRITE';
+            $query.= ', ' . $this->_db->quote_table($this->_table_name);
+            $query.= ' AS ' . $this->_db->quote_column($this->_object_name) . ' WRITE';
         }
 
-        $this->_db->query(NULL, $q, TRUE);
+        $this->_db->query(NULL, $query, TRUE);
     }
 
     /**
@@ -132,7 +131,7 @@ class Model_ORM_Structure extends ORM_MPTT {
      */
     public function getTreeByNode($root)
     {
-        Debug::vars(__METHOD__);
+//        Debug::vars(__METHOD__);
 
         $tree   = [];
         $tree[] = $root;
@@ -207,6 +206,7 @@ class Model_ORM_Structure extends ORM_MPTT {
         foreach ($struct as $cat) {
             $categ                             = $cat->as_array();
             $categ['visible']                  = $cat->article->visible;
+            $categ['link']                     = $cat->article->link;
             $dataSet[$categ['id']]             = $categ;
             $dataSet[$categ['id']]['children'] = array();
         }

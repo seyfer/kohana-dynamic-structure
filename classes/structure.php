@@ -103,4 +103,15 @@ class Structure {
         }
     }
 
+    public function renderList($structure)
+    {
+        $structureList = View::factory('structure/index/list.tpl')
+                ->set('structure', $structure)
+                ->render();
+
+//        Debug::vars(__METHOD__, $structure);
+
+        return $structureList;
+    }
+
 }
