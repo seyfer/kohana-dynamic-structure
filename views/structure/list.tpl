@@ -60,7 +60,7 @@
                     <a href="/structure/edit/{$entry.id}" class="red_oneline dir">
                         {if !empty($entry.img)}
                             <div class='oneline'>
-                                <img src='/media/img/icons/{$entry.img}'>
+                                <img src='/structure/upload/{$entry.img}'>
                             </div>
                         {/if}
 

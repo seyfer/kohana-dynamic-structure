@@ -32,7 +32,7 @@
 
                         {if !empty($entry.img)}
                             <div>
-                                <img src='/media/img/icons/{$entry.img}'>
+                                <img src='/structure/upload/{$entry.img}'>
                             </div>
                         {/if}
 

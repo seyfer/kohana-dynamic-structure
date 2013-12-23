@@ -103,9 +103,20 @@ class Structure {
         }
     }
 
-    public function renderList($structure)
+    /**
+     *
+     * @param type $structure
+     * @param string $tplPath
+     * @return type
+     */
+    public function renderWithTpl($structure, $tplPath)
     {
-        $structureList = View::factory('structure/index/list.tpl')
+
+        if (!$tplPath) {
+            $tplPath = 'structure/index/list.tpl';
+        }
+
+        $structureList = View::factory($tplPath)
                 ->set('structure', $structure)
                 ->render();
 
