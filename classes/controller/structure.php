@@ -32,6 +32,12 @@ class Controller_Structure extends Kohana_Controller_Template {
      */
     private $modelStructureRole;
 
+    /**
+     *
+     * @var \Kohana_Config
+     */
+    private $config;
+
     public function before()
     {
         parent::before();
@@ -40,7 +46,9 @@ class Controller_Structure extends Kohana_Controller_Template {
         $this->modelStructureArticle = new Structure_Article();
         $this->modelStructureRole    = new Structure_Role();
 
-        $this->uploadPath = MODPATH . "/dynamic-menu/upload/";
+        $this->config = Kohana::$config->load("structure");
+
+        $this->uploadPath = MODPATH . "/dynamic-structure/upload/";
     }
 
     /**
@@ -50,7 +58,7 @@ class Controller_Structure extends Kohana_Controller_Template {
     {
         $this->modelStructure->addRoot();
 
-        $this->request->redirect('/structure');
+        $this->request->redirect($this->config->routePath);
     }
 
     /**
@@ -63,10 +71,12 @@ class Controller_Structure extends Kohana_Controller_Template {
         $structure = $this->modelStructure->getTreeAsArray();
 
         $structureList = View::factory('structure/list.tpl')
+                ->set("routePath", "/" . $this->config->routePath)
                 ->set('left_menu_arr', $structure)
                 ->render();
 
         $this->content = View::factory('structure/content.tpl')
+                ->set("routePath", "/" . $this->config->routePath)
                 ->set('struct', $structureList);
 
         $this->template->content = $this->content;
@@ -107,6 +117,7 @@ class Controller_Structure extends Kohana_Controller_Template {
         $id = (int) $this->request->param('id');
 
         $structureList = View::factory('structure/list.tpl')
+                ->set("routePath", "/" . $this->config->routePath)
                 ->set('left_menu_arr', $structure)
                 ->set('param', $id)
                 ->render();
@@ -122,6 +133,7 @@ class Controller_Structure extends Kohana_Controller_Template {
         $rolesArr = (new Model_ORM_Roles())->showAsArray($roles, 'description');
 
         $this->content = View::factory('structure/content.tpl')
+                ->set("routePath", "/" . $this->config->routePath)
                 ->set('struct', $structureList)
                 ->set('id', $id)
                 ->set('article', $article)
@@ -140,7 +152,7 @@ class Controller_Structure extends Kohana_Controller_Template {
         $id = (new Model_ORM_Structure())
                 ->addNewElement($parent_id);
 
-        $this->request->redirect("structure/edit/{$id}");
+        $this->request->redirect($this->config->routePath . "/edit/{$id}");
     }
 
     /**
@@ -163,14 +175,18 @@ class Controller_Structure extends Kohana_Controller_Template {
             (new Model_ORM_Articles())->savePost($post);
         }
 
-        //А теперь займемся структурой
-        (new Model_ORM_Structure())
-                ->findById($id)
-                ->setImg($this->processFileUpload())
-                ->setTitle($post['title'])
-                ->update();
+        try {
+            (new Model_ORM_Structure())
+                    ->findById($id)
+                    ->setImg($this->processFileUpload())
+                    ->setTitle($post['title'])
+                    ->update();
 
-        $this->request->redirect("structure/index/{$id}");
+            $this->request->redirect($this->config->routePath . "/index/{$id}");
+        }
+        catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     /**
@@ -280,7 +296,7 @@ class Controller_Structure extends Kohana_Controller_Template {
 
         $this->modelStructureArticle->deleteByParent($id);
 
-        $this->request->redirect("structure/index");
+        $this->request->redirect($this->config->routePath . "/index");
     }
 
     /**

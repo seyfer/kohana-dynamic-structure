@@ -63,16 +63,16 @@ body{
 }
 
 .deleteStruct{
-    background: url('/structure/media/img/delete.png');
-    background-repeat: no-repeat;
+    /*background: url('/structure/media/img/delete.png');*/
+    /*background-repeat: no-repeat;*/
     width:24px;
     height:24px;
     cursor:pointer;
 }
 
 .addStruct{
-    background: url('/structure/media/img/add.png');
-    background-repeat: no-repeat;
+    /*background: url('/structure/media/img/add.png');*/
+    /*background-repeat: no-repeat;*/
     width:24px;
     height:24px;
     cursor:pointer;

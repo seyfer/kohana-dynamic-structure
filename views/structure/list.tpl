@@ -6,25 +6,31 @@
                  style='margin-left:{($entry.lvl-1)*50}px'>
 
                 <div class='oneline addStruct'>
-                    <a href = '/structure/add/{$entry.id}'></a>
+                    <a href = '{$routePath}/add/{$entry.id}'>
+                        <img src='{$routePath}/media/img/add.png'
+                             style='width:24px;height:24px;'>
+                    </a>
                 </div>
 
                 <div class='oneline deleteStruct'>
-                    <a href ='/structure/delete/{$entry.id}'></a>
+                    <a href ='{$routePath}/delete/{$entry.id}'>
+                        <img src='{$routePath}/media/img/delete.png'
+                             style='width:24px;height:24px;'>
+                    </a>
                 </div>
 
                 {if $entry.visible}
                     <div class='oneline'>
-                        <img src='/structure/media/img/eyeBig.png'
+                        <img src='{$routePath}/media/img/eyeBig.png'
                              style='width:24px;height:24px;'>
                     </div>
                 {/if}
 
                 <div class='oneline'>
-                    <a href="/structure/edit/{$entry.id}" class="red_link dir">
+                    <a href="{$routePath}/edit/{$entry.id}" class="red_link dir">
                         {if !empty($entry.img)}
                             <div class='oneline'>
-                                <img src='/structure/upload/{$entry.img}'>
+                                <img src='{$routePath}/upload/{$entry.img}'>
                             </div>
                         {/if}
                         {if !empty($entry.title)}
@@ -42,25 +48,31 @@
                  nom='{$entry.id}' style='margin-left:{($entry.lvl-1)*50}px'>
 
                 <div class='oneline addStruct'>
-                    <a href = '/structure/add/{$entry.id}'></a>
+                    <a href = '{$routePath}/add/{$entry.id}'>
+                        <img src='{$routePath}/media/img/add.png'
+                             style='width:24px;height:24px;'>
+                    </a>
                 </div>
 
                 <div class='oneline deleteStruct'>
-                    <a href = '/structure/delete/{$entry.id}'></a>
+                    <a href ='{$routePath}/delete/{$entry.id}'>
+                        <img src='{$routePath}/media/img/delete.png'
+                             style='width:24px;height:24px;'>
+                    </a>
                 </div>
 
                 {if $entry.visible}
                     <div class='oneline'>
-                        <img src='/public/img/eyeBig.png'
+                        <img src='{$routePath}/media/img/eyeBig.png'
                              style='width:24px;height:24px;'>
                     </div>
                 {/if}
 
                 <div class='oneline'>
-                    <a href="/structure/edit/{$entry.id}" class="red_oneline dir">
+                    <a href="{$routePath}/edit/{$entry.id}" class="red_oneline dir">
                         {if !empty($entry.img)}
                             <div class='oneline'>
-                                <img src='/structure/upload/{$entry.img}'>
+                                <img src='{$routePath}/upload/{$entry.img}'>
                             </div>
                         {/if}
 
@@ -77,8 +89,12 @@
 {/function}
 
 <div>
-    <a href ="/structure/addRoot/">Добавить корневой узел</a>
+    <a href ="{$routePath}/addRoot/">
+        <img src='{$routePath}/media/img/add.png'
+             style='width:24px;height:24px;'>
+        Добавить корневой узел
+    </a>
 </div>
 
-{menu_vert data=$left_menu_arr}
+{menu_vert data=$left_menu_arr routePath=$routePath}
 
