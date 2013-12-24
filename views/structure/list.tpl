@@ -28,7 +28,7 @@
                             </div>
                         {/if}
                         {if !empty($entry.title)}
-                            <div class='oneline'>{$entry.title|truncate:10}</div>
+                            <div class='oneline'>{$entry.title}</div>
                         {else}
                             <div class='oneline'>noname</div>
                         {/if}
@@ -65,7 +65,7 @@
                         {/if}
 
                         <div class='oneline'>
-                            {$entry.title|truncate:10}
+                            {$entry.title}
                         </div>
                     </a>
                 </div>

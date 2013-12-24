@@ -4,7 +4,7 @@
 
         {if isset($entry.children) && !empty($entry.children)}
 
-            {if $entry.lvl == 1}
+            {if $level == 0}
                 <li class="menu-item dropdown">
                     <a href="{$entry.link}" class="dropdown-toggle"
                        data-toggle="dropdown">
@@ -17,7 +17,8 @@
                 </li>
             {else}
                 <li class="menu-item dropdown dropdown-submenu">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="{$entry.link}">{$entry.title}</a>
+                    <a class="dropdown-toggle"
+                       data-toggle="dropdown" href="{$entry.link}">{$entry.title}</a>
                     <ul class="dropdown-menu">
                         {menu_vert data=$entry.children level=level+1}
                     </ul>
@@ -36,15 +37,18 @@
 <!-- Fixed navbar -->
 <div class="navbar navbar-default {*navbar-fixed-top*}" role="navigation">
     <div class="container">
-        {*        <div class="navbar-header">*}
-        {*            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">*}
-        {*                <span class="sr-only">Toggle navigation</span>*}
-        {*                <span class="icon-bar"></span>*}
-        {*                <span class="icon-bar"></span>*}
-        {*                <span class="icon-bar"></span>*}
-        {*            </button>*}
-        {*            <a class="navbar-brand" href="#">Система бронирования</a>*}
-        {*        </div>*}
+        {if $header}
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle"
+                        data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">{$header}</a>
+            </div>
+        {/if}
         <div class="navbar-collapse collapse">
 
             <ul class="nav navbar-nav">

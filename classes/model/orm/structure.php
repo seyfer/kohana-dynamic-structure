@@ -7,6 +7,12 @@ defined('SYSPATH') or die('No direct access allowed.');
  */
 class Model_ORM_Structure extends ORM_MPTT {
 
+    public $name_column = "title";
+
+    /**
+     *
+     * @var type
+     */
     protected $_table_name  = 'structure';
     protected $_primary_key = 'id';
 
@@ -85,11 +91,11 @@ class Model_ORM_Structure extends ORM_MPTT {
      * получить с базы дерево
      * @return type
      */
-    public function getFullTreeAsArray()
+    public function getFullTreeAsArray($scope = null, $fromLevel = null)
     {
         $this->clear();
 
-        $struct = $this->getFullTree();
+        $struct = $this->getFullTree($scope, $fromLevel);
 
         return $this->prepareStructure($struct);
     }
@@ -98,9 +104,35 @@ class Model_ORM_Structure extends ORM_MPTT {
      * полное дерево ORM_MPTT
      * @return type
      */
-    public function getFullTree()
+    public function getFullTree($scope = null, $fromLevel = null)
     {
-        return $this->fulltree()->as_array();
+        return $this->fulltree($scope, $fromLevel)->as_array();
+    }
+
+    /**
+     * Returns a full hierarchical tree, with or without scope checking.
+     *
+     * @access  public
+     * @param   bool    only retrieve nodes with specified scope
+     * @return  object
+     */
+    public function fulltree($scope = NULL, $fromLevel = null)
+    {
+        $result = self::factory($this->object_name());
+
+        if (!is_null($scope)) {
+            $result->where($this->scope_column, '=', $scope);
+        }
+        else {
+            $result->order_by($this->scope_column, 'ASC')
+                    ->order_by($this->left_column, 'ASC');
+        }
+
+        if (!is_null($fromLevel)) {
+            $result->and_where($this->level_column, ">=", $fromLevel);
+        }
+
+        return $result->find_all();
     }
 
     /**
@@ -139,6 +171,34 @@ class Model_ORM_Structure extends ORM_MPTT {
         $fullRootTree = $this->getTreeByNodeRecursive($root, $tree);
 
         return $fullRootTree;
+    }
+
+    /**
+     * узел по имени
+     * @param type $name
+     * @return type
+     */
+    public function getNodeByName($name)
+    {
+        $result = self::factory($this->object_name());
+
+        $result->where($this->name_column, '=', $name);
+
+        return $result->find();
+    }
+
+    /**
+     * все узлы с заданного уровня
+     * @param type $level
+     * @return type
+     */
+    public function getNodesFromLevel($level)
+    {
+        $result = self::factory($this->object_name());
+
+        $result->where($this->level_column, ">=", $level);
+
+        return $result->find_all();
     }
 
     /**

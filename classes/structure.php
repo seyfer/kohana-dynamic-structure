@@ -25,9 +25,9 @@ class Structure {
         return $this->modelStructure->make_root();
     }
 
-    public function getTreeAsArray()
+    public function getTreeAsArray($scope = null, $fromLevel = null)
     {
-        return $this->modelStructure->getFullTreeAsArray();
+        return $this->modelStructure->getFullTreeAsArray($scope, $fromLevel);
     }
 
     public function getRootsAsArray()
@@ -73,6 +73,53 @@ class Structure {
 //        Debug::vars($this->modelStructure->prepareStructure($tree));
 
         return $tree;
+    }
+
+    public function getTreeFromLevel($level)
+    {
+        return $this->modelStructure->getNodesFromLevel($level);
+    }
+
+    public function getTreeFromLevelAsArray($level)
+    {
+        $tree = $this->getTreeFromLevel($level);
+
+        return $this->modelStructure->prepareStructure($tree);
+    }
+
+    /**
+     *
+     * @param type $name
+     * @return type
+     */
+    public function getTreeByNodeNameAsArray($name)
+    {
+        $tree = $this->getTreeByNodeName($name);
+
+        return $this->modelStructure->prepareStructure($tree);
+    }
+
+    /**
+     * получить дерево по корневому узлу
+     * @param type $name
+     */
+    public function getTreeByNodeName($name)
+    {
+        $node = $this->getNodeByName($name);
+
+        $tree = $this->modelStructure->getTreeByNode($node);
+
+        return $tree;
+    }
+
+    /**
+     *
+     * @param type $name
+     * @return type
+     */
+    public function getNodeByName($name)
+    {
+        return $this->modelStructure->getNodeByName($name);
     }
 
     /**
