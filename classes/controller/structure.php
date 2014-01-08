@@ -38,9 +38,17 @@ class Controller_Structure extends Kohana_Controller_Template {
      */
     private $config;
 
+    /**
+     *
+     * @var \Kohana_Auth
+     */
+    private $auth;
+
     public function before()
     {
         parent::before();
+
+        $this->checkAuth();
 
         $this->modelStructure        = new Structure();
         $this->modelStructureArticle = new Structure_Article();
@@ -49,6 +57,48 @@ class Controller_Structure extends Kohana_Controller_Template {
         $this->config = Kohana::$config->load("structure");
 
         $this->uploadPath = MODPATH . "/dynamic-structure/upload/";
+    }
+
+    /**
+     * провкрка авторизации по конфигу
+     * @return type
+     * @throws HTTP_Exception_401
+     */
+    private function checkAuth()
+    {
+        if (!class_exists("Kohana_Auth")) {
+            return;
+        }
+
+        $haveAccess = NULL;
+        $authConfig = Kohana::$config->load("structure.kohana.auth");
+        $authRoles  = explode(",", $authConfig['roles']);
+
+        if ($authConfig['enabled']) {
+            $this->auth = Auth::instance();
+
+            $user = $this->auth->get_user();
+            if (!$user) {
+                throw new HTTP_Exception_401();
+            }
+
+            $roles = $user->roles->find_all()->as_array();
+            foreach ($roles as $userRole) {
+                $userRoles[] = $userRole->name;
+            }
+
+            foreach ($userRoles as $currentUserRole) {
+                if (in_array($currentUserRole, $authRoles)) {
+                    $haveAccess = $currentUserRole;
+                }
+            }
+
+            if (!$haveAccess) {
+                throw new HTTP_Exception_401();
+            }
+        }
+
+        return $haveAccess;
     }
 
     /**
