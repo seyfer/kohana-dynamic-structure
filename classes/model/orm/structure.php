@@ -55,39 +55,6 @@ class Model_ORM_Structure extends ORM_MPTT {
     }
 
     /**
-     * получить нужный формат
-     * @param type $dataSet
-     * @return int
-     */
-    protected function formStructure($dataSet)
-    {
-        //создали элемент для цикла
-        $elements = $dataSet;
-
-        $result = array();
-        foreach ($elements as $id => $value) {
-            if ($value['parent_id'] > 0 &&
-                    isset($elements[$value['parent_id']])) {
-
-                $elements[$id]['parent']                     = & $elements[$value['parent_id']];
-                $elements[$value['parent_id']]['children'][] = & $elements[$id];
-
-                if (isset($elements[$id]['countChildren'])) {
-                    $elements[$id]['countChildren'] ++;
-                }
-                else {
-                    $elements[$id]['countChildren'] = 0;
-                }
-            }
-            else {
-                $result[$id] = & $elements[$id];
-            }
-        }
-
-        return $result;
-    }
-
-    /**
      * получить с базы дерево
      * @return type
      */
@@ -122,8 +89,7 @@ class Model_ORM_Structure extends ORM_MPTT {
 
         if (!is_null($scope)) {
             $result->where($this->scope_column, '=', $scope);
-        }
-        else {
+        } else {
             $result->order_by($this->scope_column, 'ASC')
                     ->order_by($this->left_column, 'ASC');
         }
@@ -275,6 +241,37 @@ class Model_ORM_Structure extends ORM_MPTT {
     }
 
     /**
+     * получить нужный формат
+     * @param type $dataSet
+     * @return int
+     */
+    protected function formStructure($dataSet)
+    {
+        //создали элемент для цикла
+        $elements = $dataSet;
+
+        $result = array();
+        foreach ($elements as $id => $value) {
+            if ($value['parent_id'] > 0 &&
+                    isset($elements[$value['parent_id']])) {
+
+                $elements[$id]['parent']                     = & $elements[$value['parent_id']];
+                $elements[$value['parent_id']]['children'][] = & $elements[$id];
+
+                if (isset($elements[$id]['countChildren'])) {
+                    $elements[$id]['countChildren'] ++;
+                } else {
+                    $elements[$id]['countChildren'] = 0;
+                }
+            } else {
+                $result[$id] = & $elements[$id];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * найти по ид
      * @param type $id
      * @return \Model_ORM_Structure
@@ -296,8 +293,7 @@ class Model_ORM_Structure extends ORM_MPTT {
 
         if (!$parent_id) {
             $this->make_root();
-        }
-        else {
+        } else {
             $this->insert_as_last_child($parent_id);
         }
 

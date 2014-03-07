@@ -9,7 +9,7 @@ class Model_ORM_Roles extends ORM {
 
     /**
      * не используется
-     * @param type $primaryKey имя ключа массвиа
+     * @param type $result имя ключа массвиа
      * @param type $nameNeededValue имя поля массива
      * @return type
      */
@@ -27,15 +27,13 @@ class Model_ORM_Roles extends ORM {
 
             if (empty($primaryKey)) {
                 $key++;
-            }
-            else {
+            } else {
                 $key = $value->$primaryKey;
             }
 
             if (empty($nameNeededValue)) {
                 $result[$key] = $value->as_array();
-            }
-            else {
+            } else {
                 $result[$key] = $value->$nameNeededValue;
             }
         }

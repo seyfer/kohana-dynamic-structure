@@ -36,10 +36,11 @@ class Model_ORM_Structure_Page extends Model_ORM_Structure {
                 $dataSet[$categ['id']]['type_link'] = '';
 
                 if ($dataSet[$categ['id']]['link']) {
-                    if ($dataSet[$categ['id']]['link'][0] == '/')
+                    if ($dataSet[$categ['id']]['link'][0] == '/') {
                         $dataSet[$categ['id']]['type_link'] = 'int';
-                    else
+                    } else {
                         $dataSet[$categ['id']]['type_link'] = 'ext';
+                    }
                 }
                 $dataSet[$categ['id']]['children'] = array();
             }
@@ -62,8 +63,7 @@ class Model_ORM_Structure_Page extends Model_ORM_Structure {
             if (isset($data[$setting])) {
                 $result &= ($this->article->$setting == $data[$setting] ||
                         $this->article->$setting == '*');
-            }
-            else {
+            } else {
                 $result &= (bool) $this->article->$setting;
             }
         }
