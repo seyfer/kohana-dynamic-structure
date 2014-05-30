@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.7
+-- version 4.1.0
 -- http://www.phpmyadmin.net
 --
--- Хост: localhost
--- Время создания: Ноя 08 2013 г., 06:44
--- Версия сервера: 5.5.34-0ubuntu0.13.04.1
--- Версия PHP: 5.4.21-1~dotdeb.1
+-- Host: localhost
+-- Generation Time: Dec 24, 2013 at 08:40 AM
+-- Server version: 5.5.34-0ubuntu0.13.10.1
+-- PHP Version: 5.5.3-1ubuntu2.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- База данных: `razletsms`
+-- Database: `razlet_asb`
 --
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `articles`
+-- Table structure for table `articles`
 --
 
 CREATE TABLE IF NOT EXISTS `articles` (
@@ -37,12 +37,26 @@ CREATE TABLE IF NOT EXISTS `articles` (
   `namehtml` varchar(50) NOT NULL,
   `role` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=189 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=255 ;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `structure`
+-- Table structure for table `roles`
+--
+
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_name` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `structure`
 --
 
 CREATE TABLE IF NOT EXISTS `structure` (
@@ -55,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `structure` (
   `lvl` int(11) NOT NULL,
   `scope` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=291 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=86 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

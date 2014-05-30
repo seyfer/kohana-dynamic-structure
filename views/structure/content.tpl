@@ -4,7 +4,7 @@
 
 <div class='oneline content_field'>
     {if !empty($id)}
-        <form action='/structure/changearticle/{$id}' method="POST"
+        <form action='{$routePath}/changearticle/{$id}' method="POST"
               enctype="multipart/form-data">
 
             <h2>{$article.title}</h2>
@@ -21,7 +21,7 @@
                     <span class='settings-label'>Иконка кнопки</span>
                     <input type='file' name='logotip'>
                     {if !empty($article.img)}
-                        <img src='/structure/upload/{$article.img}'>
+                        <img src='{$routePath}/upload/{$article.img}'>
                     {/if}
                 </div>
 
@@ -60,7 +60,7 @@
             </textarea>
             <br>
             <input type='submit' value='Создать/Изменить'>
-            <a href ="/structure/">Назад</a>
+            <a href ="{$routePath}/">Назад</a>
         </form>
 
     {/if}
