@@ -39,15 +39,13 @@ class Structure_Element extends Database_Result {
         foreach ($array as $value) {
             if (empty($primaryKey)) {
                 $key++;
-            }
-            else {
+            } else {
                 $key = $value->$primaryKey;
             }
 
             if (empty($nameNeededValue)) {
                 $result[$key] = $value->as_array();
-            }
-            else {
+            } else {
                 $result[$key] = $value->$nameNeededValue;
             }
         }

@@ -8,5 +8,5 @@ defined('SYSPATH') or die('No direct script access.');
  * @author seyfer
  */
 class Structure_Role {
-    //put your code here
+
 }
