@@ -11,7 +11,7 @@
                         {$entry.title} <b class="caret"></b>
                     </a>
 
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" id="level{$level}">
                         {menu_vert data=$entry.children level=level+1}
                     </ul>
                 </li>
@@ -19,7 +19,8 @@
                 <li class="menu-item dropdown dropdown-submenu">
                     <a class="dropdown-toggle"
                        data-toggle="dropdown" href="{$entry.link}">{$entry.title}</a>
-                    <ul class="dropdown-menu">
+
+                    <ul class="dropdown-menu" id="level{$level}">
                         {menu_vert data=$entry.children level=level+1}
                     </ul>
                 </li>
@@ -61,15 +62,15 @@
 
 {literal}
     <script>
-        $(document).ready(function() {
-            $('.nav li.dropdown').hover(function() {
+        $(document).ready(function () {
+            $('.nav li.dropdown').hover(function () {
                 $(this).addClass('open');
-            }, function() {
+            }, function () {
                 $(this).removeClass('open');
             });
         });
 
-        $('ul.dropdown-menu [data-toggle=dropdown]').on('mouseover', function(event) {
+        $('ul.dropdown-menu [data-toggle=dropdown]').on('mouseover', function (event) {
             // Avoid following the href location when clicking
             event.preventDefault();
             // Avoid having the menu to close when clicking
@@ -93,7 +94,7 @@
 
         });
 
-        $('a.dropdown-toggle').on('click', function(event) {
+        $('a.dropdown-toggle').on('click', function (event) {
             window.location = $(this).prop("href");
         });
     </script>
