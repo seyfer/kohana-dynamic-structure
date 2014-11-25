@@ -7,7 +7,8 @@ defined('SYSPATH') or die('No direct script access.');
  *
  * @author seyfer
  */
-class Structure {
+class Structure
+{
 
     /**
      *
@@ -158,16 +159,17 @@ class Structure {
      */
     public function renderWithTpl($structure, $tplPath)
     {
-
         if (!$tplPath) {
             $tplPath = 'structure/index/list.tpl';
         }
 
+        $routeMedia        = Route::get('structure/media');
+        $boostrapFixJsPath = $routeMedia->uri(array('file' => 'js/bootstrap-fix.js'));
+
         $structureList = View::factory($tplPath)
                 ->set('structure', $structure)
+                ->set("boostrapFixJsPath", $boostrapFixJsPath)
                 ->render();
-
-//        Debug::vars(__METHOD__, $structure);
 
         return $structureList;
     }

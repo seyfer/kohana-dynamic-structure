@@ -2,7 +2,8 @@
 
 defined('SYSPATH') or die('No direct script access.');
 
-class Controller_Structure extends Kohana_Controller_Template {
+class Controller_Structure extends Kohana_Controller_Template
+{
 
     /**
      * @var   string   The path to the template view.
@@ -220,8 +221,7 @@ class Controller_Structure extends Kohana_Controller_Template {
 
         if ($article) {
             $article->savePost($post);
-        }
-        else {
+        } else {
             (new Model_ORM_Articles())->savePost($post);
         }
 
@@ -233,8 +233,7 @@ class Controller_Structure extends Kohana_Controller_Template {
                     ->update();
 
             $this->request->redirect($this->config->routePath . "/index/{$id}");
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
@@ -328,8 +327,7 @@ class Controller_Structure extends Kohana_Controller_Template {
 
             //перестроить дерево
             (new Model_ORM_Structure())->rebuild_tree();
-        }
-        catch (\Exception $exc) {
+        } catch (\Exception $exc) {
 
             $this->response->body($exc->getMessage());
         }
@@ -394,8 +392,7 @@ class Controller_Structure extends Kohana_Controller_Template {
         if ($file) {
             // Send the file content as the response
             $this->response->body(file_get_contents($file));
-        }
-        else {
+        } else {
             // Return a 404 status
             $this->request->status = 404;
         }
