@@ -60,4 +60,4 @@
     </div>
 </div>
 
-<script src="{$boostrapFixJsPath}"></script>
+<script src="/{$boostrapFixJsPath}"></script>
