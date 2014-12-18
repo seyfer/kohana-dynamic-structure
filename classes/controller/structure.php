@@ -148,8 +148,8 @@ class Controller_Structure extends Kohana_Controller_Template
 
         $this->template->scripts[] = $routeMedia->uri(array('file' => 'js/jquery-1.9.1.js'));
         $this->template->scripts[] = $routeMedia->uri(array('file' => 'js/jquery-ui-1.9.2.custom.js'));
-        $this->template->scripts[] = $routeVendor->uri(array('file' => 'tinymce/js/tinymce/tinymce.min.js'));
-        $this->template->scripts[] = $routeVendor->uri(array('file' => 'tinymce/js/tinymce/jquery.tinymce.min.js'));
+        $this->template->scripts[] = $routeVendor->uri(array('file' => 'media/tinymce/js/tinymce/tinymce.min.js'));
+        $this->template->scripts[] = $routeVendor->uri(array('file' => 'media/tinymce/js/tinymce/jquery.tinymce.min.js'));
 
         $this->template->scripts[] = $routeMedia->uri(array('file' => 'js/edit.js'));
 
