@@ -1,5 +1,5 @@
 {
-    "name": "kohana-dynamic-structure",
+    "name": "razlet/kohana-dynamic-structure",
     "version": "3.2",
     "description": "Kohana 3.2 module to manage menu and articles quick and easy",
     "type": "kohana-module",
