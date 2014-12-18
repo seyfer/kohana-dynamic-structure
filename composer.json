@@ -3,9 +3,16 @@
     "version": "3.2",
     "description": "Kohana 3.2 module to manage menu and articles quick and easy",
     "type": "kohana-module",
-    "author": "Oleg Abrazhaev <seyferseed@mail.ru>",
+    "authors": [
+        {
+            "name": "seyfer",
+            "email": "seyferseed@mail.ru",
+            "homepage": "http://seyferseed.ru",
+            "role": "Developer"
+        }
+    ],
     "require": {
-        "tinymce": "4.0.10",
+        "media/tinymce": "4.1",
         "php": ">=5.4",
         "composer/installers": "1.*"
     },
@@ -21,13 +28,12 @@
         {
             "type": "package",
             "package": {
-                "name": "tinymce",
-                "version": "4.0.10",
+                "name": "media/tinymce",
+                "version": "4.1",
                 "dist": {
-                    "url": "http://download.moxiecode.com/tinymce/tinymce_4.0.10_jquery.zip",
-                    "type": "zip"
+                    "type": "zip",
+                    "url": "http://download.moxiecode.com/tinymce/tinymce_4.1.4_jquery.zip"
                 }
-
             }
         }
     ]
