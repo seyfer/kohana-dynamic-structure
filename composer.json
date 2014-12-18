@@ -1,10 +1,21 @@
 {
     "name": "kohana-dynamic-structure",
-    "version": "0.0.1",
-    "description": "Kohana module to manage menu and articles quick and easy",
+    "version": "3.2",
+    "description": "Kohana 3.2 module to manage menu and articles quick and easy",
+    "type": "kohana-module",
     "author": "Oleg Abrazhaev <seyferseed@mail.ru>",
     "require": {
-        "tinymce": "4.0.10"
+        "tinymce": "4.0.10",
+        "php": ">=5.4",
+        "composer/installers": "1.*"
+    },
+    "autoload": {
+        "classmap": ["/"]
+    },
+    "extra": {
+        "installer-paths": {
+            "vendor/kohana/modules/{$name}/": ["type:kohana-module"]
+        }
     },
     "repositories": [
         {
@@ -19,7 +30,6 @@
 
             }
         }
-
     ]
 
 }
