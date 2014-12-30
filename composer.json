@@ -1,7 +1,7 @@
 {
     "name": "seyfer/kohana-dynamic-structure",
-    "version": "3.2",
-    "description": "Kohana 3.2 module to manage menu and articles quick and easy",
+    "version": "3.3",
+    "description": "Kohana 3.3 module to manage menu and articles quick and easy",
     "type": "kohana-module",
     "authors": [
         {
