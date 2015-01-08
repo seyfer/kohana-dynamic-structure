@@ -109,7 +109,7 @@ class Controller_Structure extends Kohana_Controller_Template
     {
         $this->modelStructure->addRoot();
 
-        $this->request->redirect($this->config->routePath);
+        $this->redirect($this->config->routePath);
     }
 
     /**
@@ -176,8 +176,6 @@ class Controller_Structure extends Kohana_Controller_Template
         $article = (new Model_ORM_Articles())
                 ->findArticle($id);
 
-//        Debug::vars($id, $article);
-
         $roles = (new Model_ORM_Roles())
                 ->find_all();
 
@@ -203,7 +201,7 @@ class Controller_Structure extends Kohana_Controller_Template
         $id = (new Model_ORM_Structure())
                 ->addNewElement($parent_id);
 
-        $this->request->redirect($this->config->routePath . "/edit/{$id}");
+        $this->redirect($this->config->routePath . "/edit/{$id}");
     }
 
     /**
@@ -232,7 +230,7 @@ class Controller_Structure extends Kohana_Controller_Template
                     ->setTitle($post['title'])
                     ->update();
 
-            $this->request->redirect($this->config->routePath . "/index/{$id}");
+            $this->redirect($this->config->routePath . "/index/{$id}");
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -278,8 +276,6 @@ class Controller_Structure extends Kohana_Controller_Template
         $id  = $this->request->param('id');
         $id2 = $this->request->param('id2');
 
-        Debug::vars($id, $id2);
-
         try {
 
             $struct1 = (new Model_ORM_Structure())
@@ -293,8 +289,6 @@ class Controller_Structure extends Kohana_Controller_Template
             if (!$struct1->loaded() || !$struct2->loaded()) {
                 throw new Exception("one of elements is not finded");
             }
-
-            Debug::vars($struct1->loaded(), $struct2->loaded());
 
             //нельзя переместить родителя в ребенка
             if ($struct2->parent() && ($struct1->id == $struct2->parent()->id)) {
@@ -320,8 +314,6 @@ class Controller_Structure extends Kohana_Controller_Template
                 return false;
             }
 
-            Debug::vars($struct1->parent()->id, $struct2->parent()->id);
-
             //по умолчанию
             $struct1->move_to_first_child($id2);
 
@@ -344,7 +336,7 @@ class Controller_Structure extends Kohana_Controller_Template
 
         $this->modelStructureArticle->deleteByParent($id);
 
-        $this->request->redirect($this->config->routePath . "/index");
+        $this->redirect($this->config->routePath . "/index");
     }
 
     /**
