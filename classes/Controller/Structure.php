@@ -62,6 +62,7 @@ class Controller_Structure extends Kohana_Controller_Template
 
     /**
      * провкрка авторизации по конфигу
+     *
      * @return type
      * @throws HTTP_Exception_401
      */
@@ -80,7 +81,7 @@ class Controller_Structure extends Kohana_Controller_Template
 
             $user = $this->auth->get_user();
             if (!$user) {
-                throw new HTTP_Exception_401();
+                HTTP_Exception::factory(401)->authenticate('Unauthorized');
             }
 
             $roles = $user->roles->find_all()->as_array();
@@ -95,7 +96,7 @@ class Controller_Structure extends Kohana_Controller_Template
             }
 
             if (!$haveAccess) {
-                throw new HTTP_Exception_401();
+                HTTP_Exception::factory(401)->authenticate('Unauthorized');
             }
         }
 
@@ -122,13 +123,13 @@ class Controller_Structure extends Kohana_Controller_Template
         $structure = $this->modelStructure->getTreeAsArray();
 
         $structureList = View::factory('structure/list.tpl')
-                ->set("routePath", "/" . $this->config->routePath)
-                ->set('left_menu_arr', $structure)
-                ->render();
+                             ->set("routePath", "/" . $this->config->routePath)
+                             ->set('left_menu_arr', $structure)
+                             ->render();
 
         $this->content = View::factory('structure/content.tpl')
-                ->set("routePath", "/" . $this->config->routePath)
-                ->set('struct', $structureList);
+                             ->set("routePath", "/" . $this->config->routePath)
+                             ->set('struct', $structureList);
 
         $this->template->content = $this->content;
     }
@@ -138,20 +139,20 @@ class Controller_Structure extends Kohana_Controller_Template
      */
     private function addCssAnsJs()
     {
-        $this->template->styles  = array();
-        $this->template->scripts = array();
+        $this->template->styles  = [];
+        $this->template->scripts = [];
 
         $routeMedia  = Route::get('structure/media');
         $routeVendor = Route::get('structure/vendor');
 
-        $this->template->styles[] = $routeMedia->uri(array('file' => 'css/content.css'));
+        $this->template->styles[] = $routeMedia->uri(['file' => 'css/content.css']);
 
-        $this->template->scripts[] = $routeMedia->uri(array('file' => 'js/jquery-1.9.1.js'));
-        $this->template->scripts[] = $routeMedia->uri(array('file' => 'js/jquery-ui-1.9.2.custom.js'));
-        $this->template->scripts[] = $routeVendor->uri(array('file' => 'media/tinymce/js/tinymce/tinymce.min.js'));
-        $this->template->scripts[] = $routeVendor->uri(array('file' => 'media/tinymce/js/tinymce/jquery.tinymce.min.js'));
+        $this->template->scripts[] = $routeMedia->uri(['file' => 'js/jquery-1.9.1.js']);
+        $this->template->scripts[] = $routeMedia->uri(['file' => 'js/jquery-ui-1.9.2.custom.js']);
+        $this->template->scripts[] = $routeVendor->uri(['file' => 'media/tinymce/js/tinymce/tinymce.min.js']);
+        $this->template->scripts[] = $routeVendor->uri(['file' => 'media/tinymce/js/tinymce/jquery.tinymce.min.js']);
 
-        $this->template->scripts[] = $routeMedia->uri(array('file' => 'js/edit.js'));
+        $this->template->scripts[] = $routeMedia->uri(['file' => 'js/edit.js']);
 
         $this->template->page = "structure";
     }
@@ -165,28 +166,28 @@ class Controller_Structure extends Kohana_Controller_Template
 
         $structure = $this->modelStructure->getTreeAsArray();
 
-        $id = (int) $this->request->param('id');
+        $id = (int)$this->request->param('id');
 
         $structureList = View::factory('structure/list.tpl')
-                ->set("routePath", "/" . $this->config->routePath)
-                ->set('left_menu_arr', $structure)
-                ->set('param', $id)
-                ->render();
+                             ->set("routePath", "/" . $this->config->routePath)
+                             ->set('left_menu_arr', $structure)
+                             ->set('param', $id)
+                             ->render();
 
         $article = (new Model_ORM_Articles())
-                ->findArticle($id);
+            ->findArticle($id);
 
         $roles = (new Model_ORM_Roles())
-                ->find_all();
+            ->find_all();
 
         $rolesArr = (new Model_ORM_Roles())->showAsArray($roles, 'description');
 
         $this->content = View::factory('structure/content.tpl')
-                ->set("routePath", "/" . $this->config->routePath)
-                ->set('struct', $structureList)
-                ->set('id', $id)
-                ->set('article', $article)
-                ->set('roles', $rolesArr);
+                             ->set("routePath", "/" . $this->config->routePath)
+                             ->set('struct', $structureList)
+                             ->set('id', $id)
+                             ->set('article', $article)
+                             ->set('roles', $rolesArr);
 
         $this->template->content = $this->content;
     }
@@ -199,7 +200,7 @@ class Controller_Structure extends Kohana_Controller_Template
         $parent_id = $this->request->param('id');
 
         $id = (new Model_ORM_Structure())
-                ->addNewElement($parent_id);
+            ->addNewElement($parent_id);
 
         $this->redirect($this->config->routePath . "/edit/{$id}");
     }
@@ -215,7 +216,7 @@ class Controller_Structure extends Kohana_Controller_Template
 
         //сохранить статью
         $article = (new Model_ORM_Articles())
-                ->findByParent($id);
+            ->findByParent($id);
 
         if ($article) {
             $article->savePost($post);
@@ -225,19 +226,22 @@ class Controller_Structure extends Kohana_Controller_Template
 
         try {
             (new Model_ORM_Structure())
-                    ->findById($id)
-                    ->setImg($this->processFileUpload())
-                    ->setTitle($post['title'])
-                    ->update();
+                ->findById($id)
+                ->setImg($this->processFileUpload())
+                ->setTitle($post['title'])
+                ->update();
 
             $this->redirect($this->config->routePath . "/index/{$id}");
         } catch (Exception $e) {
             echo $e->getMessage();
         }
+
+        $this->redirect($this->config->routePath . "/index/{$id}");
     }
 
     /**
      * загрузка иконок
+     *
      * @return boolean
      */
     private function processFileUpload()
@@ -245,15 +249,15 @@ class Controller_Structure extends Kohana_Controller_Template
         if ($_FILES['logotip']['error'] == 0) {
 
             $validation = Validation::factory($_FILES)
-                    ->label('image', 'Picture')
-                    ->rule('image', array(
-                'Upload::valid'     => array(),
-                'Upload::size'      => array('1M'),
-                'Upload::not_empty' => array(),
-                'Upload::type'      => array(
-                    'Upload::type' => array('jpg', 'png', 'gif')
-                ),
-            ));
+                                    ->label('image', 'Picture')
+                                    ->rule('image', [
+                                        'Upload::valid'     => [],
+                                        'Upload::size'      => ['1M'],
+                                        'Upload::not_empty' => [],
+                                        'Upload::type'      => [
+                                            'Upload::type' => ['jpg', 'png', 'gif']
+                                        ],
+                                    ]);
 
             if ($validation->check()) {
                 Upload::save($validation['logotip'], $_FILES['logotip']['name'], $this->uploadPath);
@@ -267,6 +271,7 @@ class Controller_Structure extends Kohana_Controller_Template
 
     /**
      * двигать
+     *
      * @return boolean
      */
     public function action_move()
@@ -279,12 +284,12 @@ class Controller_Structure extends Kohana_Controller_Template
         try {
 
             $struct1 = (new Model_ORM_Structure())
-                    ->where('id', '=', $id)
-                    ->find();
+                ->where('id', '=', $id)
+                ->find();
 
             $struct2 = (new Model_ORM_Structure())
-                    ->where('id', '=', $id2)
-                    ->find();
+                ->where('id', '=', $id2)
+                ->find();
 
             if (!$struct1->loaded() || !$struct2->loaded()) {
                 throw new Exception("one of elements is not finded");
@@ -302,6 +307,7 @@ class Controller_Structure extends Kohana_Controller_Template
                 $struct2->save();
                 $struct1->save();
                 $struct1->move_to_prev_sicbling($id2);
+
                 return true;
             }
 
@@ -311,6 +317,7 @@ class Controller_Structure extends Kohana_Controller_Template
 
             if (!$struct2->parent()) {
                 $struct1->move_to_first_child($id2);
+
                 return false;
             }
 
@@ -366,6 +373,7 @@ class Controller_Structure extends Kohana_Controller_Template
     /**
      * получить содержимое файла
      * установить заголовки по типу файла
+     *
      * @param type $dir
      */
     private function getFileContent($dir)
@@ -379,7 +387,7 @@ class Controller_Structure extends Kohana_Controller_Template
         // Array ( [dirname] => css [basename] => reset.css
         // [extension] => css [filename] => reset )
         $file = Kohana::find_file($dir, $path['dirname'] .
-                        DIRECTORY_SEPARATOR . $path['filename'], $path['extension']);
+                                        DIRECTORY_SEPARATOR . $path['filename'], $path['extension']);
 
         if ($file) {
             // Send the file content as the response
